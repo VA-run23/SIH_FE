@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3>Principal Portal</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+                <li><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Dashboard Overview</h2>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <span>Dr. Anjali Rao</span> <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header">
+                                <h5>Dr. Anjali Rao</h5> <p>Principal</p>
+                            </div>
+                            <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+           <section class="kpi-cards">
+                <div class="kpi-row-half">
+                    <div class="card expandable-card">
+                        <div class="card-main"><div class="card-icon" style="background-color: #e0f7fa;"><i class="fas fa-chart-pie" style="color: #00796b;"></i></div><div class="card-info"><h3 id="year1-percentage">96.0%</h3><p id="year1-timeslot">1st Year Overall</p></div><i class="fas fa-chevron-down expand-icon"></i></div>
+                        <div class="expanded-content"><h4>1st Year Branch %</h4><ul><li><span>CSE:</span> <strong id="y1-cse">98%</strong></li><li><span>ECE:</span> <strong id="y1-ece">95%</strong></li><li><span>MECH:</span> <strong id="y1-mech">94%</strong></li><li><span>CIV:</span> <strong id="y1-civ">97%</strong></li></ul></div>
+                    </div>
+                    <div class="card expandable-card">
+                         <div class="card-main"><div class="card-icon" style="background-color: #e0f7fa;"><i class="fas fa-chart-pie" style="color: #00796b;"></i></div><div class="card-info"><h3 id="year2-percentage">90.0%</h3><p id="year2-timeslot">2nd Year Overall</p></div><i class="fas fa-chevron-down expand-icon"></i></div>
+                        <div class="expanded-content"><h4>2nd Year Branch %</h4><ul><li><span>CSE:</span> <strong id="y2-cse">92%</strong></li><li><span>ECE:</span> <strong id="y2-ece">90%</strong></li><li><span>MECH:</span> <strong id="y2-mech">88%</strong></li><li><span>CIV:</span> <strong id="y2-civ">89%</strong></li></ul></div>
+                    </div>
+                </div>
+                <div class="kpi-row-half">
+                    <div class="card expandable-card">
+                        <div class="card-main"><div class="card-icon" style="background-color: #e0f7fa;"><i class="fas fa-chart-pie" style="color: #00796b;"></i></div><div class="card-info"><h3 id="year3-percentage">94.0%</h3><p id="year3-timeslot">3rd Year Overall</p></div><i class="fas fa-chevron-down expand-icon"></i></div>
+                        <div class="expanded-content"><h4>3rd Year Branch %</h4><ul><li><span>CSE:</span> <strong id="y3-cse">95%</strong></li><li><span>ECE:</span> <strong id="y3-ece">96%</strong></li><li><span>MECH:</span> <strong id="y3-mech">92%</strong></li><li><span>CIV:</span> <strong id="y3-civ">93%</strong></li></ul></div>
+                    </div>
+                    <div class="card expandable-card">
+                        <div class="card-main"><div class="card-icon" style="background-color: #e0f7fa;"><i class="fas fa-chart-pie" style="color: #00796b;"></i></div><div class="card-info"><h3 id="year4-percentage">90.0%</h3><p id="year4-timeslot">4th Year Overall</p></div><i class="fas fa-chevron-down expand-icon"></i></div>
+                        <div class="expanded-content"><h4>4th Year Branch %</h4><ul><li><span>CSE:</span> <strong id="y4-cse">93%</strong></li><li><span>ECE:</span> <strong id="y4-ece">90%</strong></li><li><span>MECH:</span> <strong id="y4-mech">87%</strong></li><li><span>CIV:</span> <strong id="y4-civ">91%</strong></li></ul></div>
+                    </div>
+                </div>
+                <div class="kpi-row-half">
+                    <div class="card"><div class="card-icon" style="background-color: #e8f5e9;"><i class="fas fa-chalkboard-teacher" style="color: #388e3c;"></i></div><div class="card-info"><h3>48 / 50</h3><p>Staff Present</p></div></div>
+                    <div class="card"><div class="card-icon" style="background-color: #fce4ec;"><i class="fas fa-envelope-open-text" style="color: #d81b60;"></i></div><div class="card-info"><h3>3</h3><p>Pending Approvals</p></div></div>
+                </div>
+            </section>
+
+            <section class="data-section">
+                <div class="chart-container">
+                    <h4>Weekly Student & Staff Trend</h4>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/2022_Line_Chart_of_the_S%26P_500.svg/800px-2022_Line_Chart_of_the_S%26P_500.svg.png" alt="Weekly attendance chart for students and lecturers" style="width:100%; height:auto; border-radius: 5px;">
+                </div>
+                <div class="list-container">
+                    <h4>Absent Lecturers Today</h4>
+                    <ul>
+                        <li>Dr. Anand Kumar - Department of Computer Science</li> <li>Prof. Priya Sharma - Department of Electronics</li>   </ul>
+                    <h4>Recent Alerts</h4>
+                     <ul>
+                        <li>CSE Dept attendance dropped by 10% yesterday.</li>
+                        <li>Leave request from Mr. Santosh Gowda.</li> </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script>
+    // --- DYNAMIC SCROLLING SCRIPT (No changes needed here) ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const year1Data=[{timeslot:"1st Year (9-10 AM)",percentage:"98.1%",branches:{cse:"99%",ece:"97%",mech:"98%",civ:"99%"}},{timeslot:"1st Year (10-11 AM)",percentage:"97.5%",branches:{cse:"98%",ece:"96%",mech:"97%",civ:"98%"}},{timeslot:"1st Year (11-12 PM)",percentage:"96.2%",branches:{cse:"97%",ece:"95%",mech:"96%",civ:"97%"}},{timeslot:"1st Year (12-1 PM)",percentage:"95.8%",branches:{cse:"96%",ece:"94%",mech:"95%",civ:"97%"}},{timeslot:"1st Year (2-3 PM)",percentage:"94.5%",branches:{cse:"95%",ece:"93%",mech:"94%",civ:"95%"}},{timeslot:"1st Year (3-4 PM)",percentage:"93.1%",branches:{cse:"94%",ece:"92%",mech:"93%",civ:"94%"}},{timeslot:"1st Year Overall",percentage:"96.0%",branches:{cse:"98%",ece:"95%",mech:"94%",civ:"97%"}}];
+        const year2Data=[{timeslot:"2nd Year (9-10 AM)",percentage:"91.3%",branches:{cse:"93%",ece:"91%",mech:"90%",civ:"91%"}},{timeslot:"2nd Year (10-11 AM)",percentage:"90.5%",branches:{cse:"92%",ece:"90%",mech:"89%",civ:"90%"}},{timeslot:"2nd Year (11-12 PM)",percentage:"89.0%",branches:{cse:"91%",ece:"88%",mech:"87%",civ:"89%"}},{timeslot:"2nd Year (12-1 PM)",percentage:"88.6%",branches:{cse:"90%",ece:"87%",mech:"86%",civ:"88%"}},{timeslot:"2nd Year (2-3 PM)",percentage:"89.5%",branches:{cse:"91%",ece:"88%",mech:"88%",civ:"90%"}},{timeslot:"2nd Year (3-4 PM)",percentage:"88.1%",branches:{cse:"90%",ece:"87%",mech:"86%",civ:"89%"}},{timeslot:"2nd Year Overall",percentage:"90.0%",branches:{cse:"92%",ece:"90%",mech:"88%",civ:"89%"}}];
+        const year3Data=[{timeslot:"3rd Year (9-10 AM)",percentage:"95.2%",branches:{cse:"96%",ece:"97%",mech:"93%",civ:"94%"}},{timeslot:"3rd Year (10-11 AM)",percentage:"94.8%",branches:{cse:"95%",ece:"96%",mech:"92%",civ:"94%"}},{timeslot:"3rd Year (11-12 PM)",percentage:"93.5%",branches:{cse:"94%",ece:"95%",mech:"91%",civ:"92%"}},{timeslot:"3rd Year (12-1 PM)",percentage:"92.1%",branches:{cse:"93%",ece:"94%",mech:"90%",civ:"91%"}},{timeslot:"3rd Year (2-3 PM)",percentage:"93.8%",branches:{cse:"94%",ece:"95%",mech:"91%",civ:"93%"}},{timeslot:"3rd Year (3-4 PM)",percentage:"92.9%",branches:{cse:"93%",ece:"94%",mech:"90%",civ:"92%"}},{timeslot:"3rd Year Overall",percentage:"94.0%",branches:{cse:"95%",ece:"96%",mech:"92%",civ:"93%"}}];
+        const year4Data=[{timeslot:"4th Year (9-10 AM)",percentage:"92.7%",branches:{cse:"94%",ece:"92%",mech:"90%",civ:"93%"}},{timeslot:"4th Year (10-11 AM)",percentage:"91.1%",branches:{cse:"93%",ece:"91%",mech:"88%",civ:"92%"}},{timeslot:"4th Year (11-12 PM)",percentage:"90.3%",branches:{cse:"92%",ece:"90%",mech:"87%",civ:"91%"}},{timeslot:"4th Year (12-1 PM)",percentage:"89.5%",branches:{cse:"91%",ece:"89%",mech:"86%",civ:"90%"}},{timeslot:"4th Year (2-3 PM)",percentage:"90.6%",branches:{cse:"92%",ece:"90%",mech:"88%",civ:"91%"}},{timeslot:"4th Year (3-4 PM)",percentage:"89.8%",branches:{cse:"91%",ece:"89%",mech:"87%",civ:"90%"}},{timeslot:"4th Year Overall",percentage:"90.0%",branches:{cse:"93%",ece:"90%",mech:"87%",civ:"91%"}}];
+        const elements={year1:{p:document.getElementById('year1-percentage'),t:document.getElementById('year1-timeslot'),data:year1Data,index:0,branches:{cse:document.getElementById('y1-cse'),ece:document.getElementById('y1-ece'),mech:document.getElementById('y1-mech'),civ:document.getElementById('y1-civ')}},year2:{p:document.getElementById('year2-percentage'),t:document.getElementById('year2-timeslot'),data:year2Data,index:0,branches:{cse:document.getElementById('y2-cse'),ece:document.getElementById('y2-ece'),mech:document.getElementById('y2-mech'),civ:document.getElementById('y2-civ')}},year3:{p:document.getElementById('year3-percentage'),t:document.getElementById('year3-timeslot'),data:year3Data,index:0,branches:{cse:document.getElementById('y3-cse'),ece:document.getElementById('y3-ece'),mech:document.getElementById('y3-mech'),civ:document.getElementById('y3-civ')}},year4:{p:document.getElementById('year4-percentage'),t:document.getElementById('year4-timeslot'),data:year4Data,index:0,branches:{cse:document.getElementById('y4-cse'),ece:document.getElementById('y4-ece'),mech:document.getElementById('y4-mech'),civ:document.getElementById('y4-civ')}}};
+        setInterval(()=>{for(const year in elements){const el=elements[year];if(el.p&&el.t){el.index=(el.index+1)%el.data.length;const currentData=el.data[el.index];el.p.textContent=currentData.percentage;el.t.textContent=currentData.timeslot;el.branches.cse.textContent=currentData.branches.cse;el.branches.ece.textContent=currentData.branches.ece;el.branches.mech.textContent=currentData.branches.mech;el.branches.civ.textContent=currentData.branches.civ}}},4000);
+        const expandableCards=document.querySelectorAll('.expandable-card');expandableCards.forEach(card=>{const cardHeader=card.querySelector('.card-main');if(cardHeader){cardHeader.addEventListener('click',function(){card.classList.toggle('active')})}});
+    });
+</script>
+<script>
+    // --- USER PROFILE DROPDOWN SCRIPT (No changes needed here) ---
+    const userProfile = document.querySelector('.user-profile');
+    if (userProfile) {
+        const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+        userProfile.addEventListener('click', function(event) {
+            dropdownMenu.classList.toggle('active');
+            event.stopPropagation();
+        });
+        window.addEventListener('click', function(event) {
+            if (dropdownMenu && dropdownMenu.classList.contains('active')) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

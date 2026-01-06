@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer List - Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header"><h3>Principal Portal</h3></div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="active"><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+                <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <header class="header">
+                <h2>Computer Science Department</h2>
+                <div class="header-actions">
+                    <a href="staff.html" class="btn"><i class="fas fa-arrow-left"></i> Back to Departments</a>
+                    <div class="user-info">
+                        <div class="user-profile">
+                            <span>Dr. Anjali Rao</span>
+                            <i class="fas fa-user-circle"></i>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-header"><h5>Dr. Anjali Rao</h5><p>Principal</p></div>
+                                <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="content-wrapper">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Lecturer</th>
+                            <th>Lecturer ID</th>
+                            <th>Post</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="lecturer-profile-cell"><img src="https://i.imgur.com/8b23K1D.jpg" alt="Lecturer Photo"><span>Dr. Anand Kumar</span></div></td>
+                            <td>FAC-101</td> <td>Professor & HOD</td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="showLecturerTimetable('Dr. Anand Kumar')"><i class="fas fa-calendar-alt"></i> View Schedule</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><div class="lecturer-profile-cell"><img src="https://i.imgur.com/JFHjd2z.jpg" alt="Lecturer Photo"><span>Prof. Geetha Murthy</span></div></td>
+                            <td>FAC-105</td> <td>Associate Professor</td>
+                             <td>
+                                <button class="btn btn-secondary" onclick="showLecturerTimetable('Prof. Geetha Murthy')"><i class="fas fa-calendar-alt"></i> View Schedule</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><div class="lecturer-profile-cell"><img src="https://i.imgur.com/8b23K1D.jpg" alt="Lecturer Photo"><span>Mr. Santosh Gowda</span></div></td>
+                            <td>FAC-108</td> <td>Assistant Professor</td>
+                             <td>
+                                <button class="btn btn-secondary" onclick="showLecturerTimetable('Mr. Santosh Gowda')"><i class="fas fa-calendar-alt"></i> View Schedule</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><div class="lecturer-profile-cell"><img src="https://i.imgur.com/JFHjd2z.jpg" alt="Lecturer Photo"><span>Ms. Kaur</span></div></td>
+                            <td>FAC-112</td> <td>Assistant Professor</td>
+                             <td>
+                                <button class="btn btn-secondary" onclick="showLecturerTimetable('Ms. Kaur')"><i class="fas fa-calendar-alt"></i> View Schedule</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+    <div id="timetable-modal" class="timetable-modal">
+        <div class="timetable-modal-header">
+            <h3 id="modal-lecturer-name"></h3>
+            <button class="close-btn" onclick="closeTimetableModal()">&times;</button>
+        </div>
+        <div class="timetable-modal-body">
+            <div id="timetable-display" class="timetable-grid">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const userProfile = document.querySelector('.user-profile');
+        if (userProfile) {
+            const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+            userProfile.addEventListener('click', function(event) { dropdownMenu.classList.toggle('active'); event.stopPropagation(); });
+            window.addEventListener('click', function(event) { if (dropdownMenu && dropdownMenu.classList.contains('active')) { dropdownMenu.classList.remove('active'); } });
+        }
+    </script>
+    
+    <script>
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const timetableModal = document.getElementById('timetable-modal');
+        const timetableDisplay = document.getElementById('timetable-display');
+        const modalLecturerName = document.getElementById('modal-lecturer-name');
+
+        const FREE_SLOT = { s: 'Free', t: 'N/A' };
+        const LUNCH_SLOT = { s: 'Lunch', t: 'N/A' };
+
+        // --- EXPANDED and more realistic data set ---
+        const masterTimetableData = {
+            'CS-3A': [ // Mon, Tue, Wed, Thu, Fri
+                [{ s: 'DBMS', t: 'Dr. Anand Kumar' }, { s: 'OS', t: 'Ms. Kaur' }, { s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, LUNCH_SLOT, { s: 'DBMS Lab', t: 'Dr. Anand Kumar' }, { s: 'DBMS Lab', t: 'Dr. Anand Kumar' }],
+                [{ s: 'SE', t: 'Mr. Santosh Gowda' }, { s: 'DBMS', t: 'Dr. Anand Kumar' }, { s: 'OS', t: 'Ms. Kaur' }, { s: 'CN', t: 'Prof. Geetha Murthy' }, LUNCH_SLOT, { s: 'OS Lab', t: 'Ms. Kaur' }, { s: 'OS Lab', t: 'Ms. Kaur' }],
+                [{ s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, { s: 'DBMS', t: 'Dr. Anand Kumar' }, { s: 'OS', t: 'Ms. Kaur' }, LUNCH_SLOT, FREE_SLOT, FREE_SLOT],
+                [{ s: 'OS', t: 'Ms. Kaur' }, { s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, { s: 'DBMS', t: 'Dr. Anand Kumar', status: 'cancelled', alert: 'Cancelled for dept. meeting' }, LUNCH_SLOT, { s: 'Aptitude', t: 'Guest Faculty' }, FREE_SLOT],
+                [{ s: 'DBMS', t: 'Dr. Anand Kumar' }, FREE_SLOT, { s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, LUNCH_SLOT, FREE_SLOT, FREE_SLOT]
+            ],
+            'CS-3B': [
+                [{ s: 'OS', t: 'Ms. Kaur' }, { s: 'DBMS', t: 'Dr. Anand Kumar' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, { s: 'CN', t: 'Prof. Geetha Murthy' }, LUNCH_SLOT, { s: 'OS Lab', t: 'Ms. Kaur' }, { s: 'OS Lab', t: 'Ms. Kaur' }],
+                [{ s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'OS', t: 'Ms. Kaur' }, { s: 'DBMS', t: 'Dr. Anand Kumar' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, LUNCH_SLOT, { s: 'DBMS Lab', t: 'Dr. Anand Kumar' }, { s: 'DBMS Lab', t: 'Dr. Anand Kumar' }],
+                [{ s: 'SE', t: 'Mr. Santosh Gowda' }, { s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'OS', t: 'Ms. Kaur' }, { s: 'DBMS', t: 'Dr. Anand Kumar' }, LUNCH_SLOT, FREE_SLOT, FREE_SLOT],
+                [{ s: 'DBMS', t: 'Dr. Anand Kumar' }, { s: 'SE', t: 'Mr. Santosh Gowda' }, { s: 'CN', t: 'Prof. Geetha Murthy' }, { s: 'OS', t: 'Ms. Kaur' }, LUNCH_SLOT, { s: 'Aptitude', t: 'Guest Faculty' }, FREE_SLOT],
+                [{ s: 'CN', t: 'Prof. Geetha Murthy', status: 'substituted', alert: 'Taken by Dr. Anand Kumar' }, { s: 'DBMS', t: 'Dr. Anand Kumar' }, FREE_SLOT, { s: 'SE', t: 'Mr. Santosh Gowda' }, LUNCH_SLOT, FREE_SLOT, FREE_SLOT]
+            ]
+        };
+
+        function showLecturerTimetable(lecturerName) {
+            const times = ['9-10 AM', '10-11 AM', '11-12 PM', '12-1 PM', '1-2 PM', '2-3 PM', '3-4 PM'];
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            
+            const teacherSchedule = Array.from({ length: times.length }, () => Array(days.length).fill(null));
+
+            for (const sectionKey in masterTimetableData) {
+                const schedule = masterTimetableData[sectionKey];
+                for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
+                    for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
+                        const period = schedule[dayIndex] ? schedule[dayIndex][timeIndex] : null;
+                        if (period && period.t === lecturerName) {
+                            teacherSchedule[timeIndex][dayIndex] = { ...period, section: sectionKey };
+                        }
+                    }
+                }
+            }
+
+            let gridHtml = `<div class="timetable-cell header">Time</div>`;
+            days.forEach(day => gridHtml += `<div class="timetable-cell header">${day}</div>`);
+
+            times.forEach((time, timeIndex) => {
+                // Handle Lunch Break Row
+                if (time === '12-1 PM') {
+                    gridHtml += `<div class="timetable-cell time-header">${time}</div>`;
+                    gridHtml += `<div class="timetable-cell lunch" style="grid-column: span 5;">LUNCH BREAK</div>`;
+                    return; // Skip the rest of the loop for the lunch hour
+                }
+
+                gridHtml += `<div class="timetable-cell time-header">${time}</div>`;
+                days.forEach((day, dayIndex) => {
+                    const period = teacherSchedule[timeIndex][dayIndex];
+                    if (period) {
+                        let alertHtml = '';
+                        let cellClass = period.status || ''; // 'cancelled' or 'substituted'
+                        if (period.alert) {
+                            alertHtml = `<div class="alert-badge">${period.alert}</div>`;
+                        }
+                        gridHtml += `<div class="timetable-cell ${cellClass}">${period.s}<small>${period.section}</small>${alertHtml}</div>`;
+                    } else {
+                        gridHtml += `<div class="timetable-cell free-slot">Free</div>`;
+                    }
+                });
+            });
+
+            timetableDisplay.innerHTML = gridHtml;
+            modalLecturerName.textContent = `Weekly Schedule: ${lecturerName}`;
+            modalBackdrop.classList.add('active');
+            timetableModal.classList.add('active');
+        }
+
+        function closeTimetableModal() {
+            modalBackdrop.classList.remove('active');
+            timetableModal.classList.remove('active');
+        }
+
+        modalBackdrop.addEventListener('click', closeTimetableModal);
+    </script>
+</body>
+</html>

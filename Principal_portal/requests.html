@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Approvals - Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header"><h3>Principal Portal</h3></div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li class="active"><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+                <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Request Approvals</h2>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <span>Dr. Anjali Rao</span> <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header">
+                                <h5>Dr. Anjali Rao</h5> <p>Principal</p>
+                            </div>
+                            <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="request-accordion">
+                    <div class="request-item">
+                        <button class="request-header">
+                            <span class="request-icon"><i class="fas fa-calendar-alt"></i></span>
+                            <div class="request-title"><h5>Leave Application</h5><p>From: Dr. Anand Kumar</p></div> <span class="request-status">Pending</span>
+                            <i class="fas fa-chevron-down request-caret"></i>
+                        </button>
+                        <div class="request-body">
+                            <div class="request-body-content">
+                                <p><strong>Dates Requested:</strong> 20-Sep-2025 to 22-Sep-2025</p>
+                                <p><strong>Reason:</strong> Personal emergency, need to travel out of state. I have assigned my classes for these days to Prof. Geetha Murthy.</p>
+                                <div class="actions"><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="request-item">
+                        <button class="request-header">
+                            <span class="request-icon"><i class="fas fa-door-open"></i></span>
+                            <div class="request-title"><h5>Seminar Hall Booking</h5><p>From: Prof. Priya Sharma</p></div> <span class="request-status">Pending</span>
+                            <i class="fas fa-chevron-down request-caret"></i>
+                        </button>
+                         <div class="request-body">
+                            <div class="request-body-content">
+                                <p><strong>Date & Time:</strong> 25-Sep-2025, 10:00 AM - 1:00 PM</p>
+                                <p><strong>Reason:</strong> Requesting to book the main seminar hall for a guest lecture on "Modern VLSI Design Trends" for final year ECE students.</p>
+                                <div class="actions"><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="request-item">
+                        <button class="request-header">
+                            <span class="request-icon"><i class="fas fa-tools"></i></span>
+                            <div class="request-title"><h5>IT Support Request</h5><p>From: Prof. Vikram Hegde</p></div> <span class="request-status">Pending</span>
+                            <i class="fas fa-chevron-down request-caret"></i>
+                        </button>
+                         <div class="request-body">
+                            <div class="request-body-content">
+                                <p><strong>Location:</strong> Mechanical Block, Room 204</p>
+                                <p><strong>Reason:</strong> The projector in the classroom is not functioning correctly. It is displaying a yellow tint. Requesting urgent technical assistance as it is affecting classes.</p>
+                                <div class="actions"><button class="btn btn-approve">Acknowledge</button><button class="btn btn-reject">Forward to IT</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const accordionItems = document.querySelectorAll('.request-header');
+        accordionItems.forEach(item => {
+            item.addEventListener('click', event => {
+                const parentItem = item.parentElement;
+                parentItem.classList.toggle('active');
+            });
+        });
+    </script>
+    <script>
+        const userProfile = document.querySelector('.user-profile');
+        if (userProfile) {
+            const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+            userProfile.addEventListener('click', function(event) {
+                dropdownMenu.classList.toggle('active');
+                event.stopPropagation();
+            });
+            window.addEventListener('click', function(event) {
+                if (dropdownMenu && dropdownMenu.classList.contains('active')) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header"><h3>Principal Portal</h3></div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="active"><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+                <li><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Generate Reports</h2>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <span>Dr. Anjali Rao</span> <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header">
+                                <h5>Dr. Anjali Rao</h5> <p>Principal</p>
+                            </div>
+                            <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="tabs">
+                    <button class="tab-link active" onclick="openTab(event, 'StudentReport')">Student Reports</button>
+                    <button class="tab-link" onclick="openTab(event, 'LecturerReport')">Lecturer Reports</button>
+                </div>
+                <div id="StudentReport" class="tab-content active">
+                    <div class="search-bar-container"><input type="search" placeholder="Search for a student..."></div>
+                    <ul class="results-list">
+                        <li onclick="showStudentReport('s1')">Rohan Patel - 4JC22CS001</li>
+                        <li onclick="showStudentReport('s2')">Meera Iyer - 4JC22EC002</li>
+                        <li onclick="showStudentReport('s3')">Kiran Nayak - 4JC22ME003</li>
+                        <li onclick="showStudentReport('s4')">Divya Shenoy - 4JC22CS004</li>
+                        <li onclick="showStudentReport('s5')">Arjun Reddy - 4JC22CV005</li>
+                    </ul>
+                </div>
+                <div id="LecturerReport" class="tab-content">
+                    <h4>Select a lecturer to view their report:</h4>
+                    <ul class="results-list">
+                        <li onclick="showLecturerReport('l1')">Dr. Anand Kumar - Dept. of Computer Science</li>
+                        <li onclick="showLecturerReport('l2')">Prof. Priya Sharma - Dept. of Electronics</li>
+                        <li onclick="showLecturerReport('l3')">Prof. Vikram Hegde - Dept. of Mechanical</li>
+                        <li onclick="showLecturerReport('l4')">Dr. Lakshmi Menon - Dept. of Civil</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <div id="studentReportView" class="report-view">
+        <button class="close-btn no-print" onclick="closeReports()">&times;</button>
+        <div class="report-masthead">
+            <div class="report-photo"><img id="s-photo" src="" alt="Student Photo"></div>
+            <div class="report-basic-info"><h4 id="s-name"></h4><p><span id="s-id"></span> | <span id="s-branch"></span></p></div>
+        </div>
+        <div class="report-body">
+            <h5>Academic Details</h5>
+            <div class="detail-grid"><div class="detail-item"><span>Section:</span> <strong id="s-section"></strong></div><div class="detail-item"><span>Current Year:</span> <strong id="s-year"></strong></div><div class="detail-item"><span>Attendance:</span> <strong id="s-attendance"></strong></div><div class="detail-item"><span>Overall CGPA:</span> <strong id="s-cgpa"></strong></div><div class="detail-item"><span>Proctor Name:</span> <strong id="s-proctor"></strong></div><div class="detail-item"><span>Active Backlogs:</span> <strong id="s-backlogs"></strong></div></div>
+            <h5>Contact Information</h5>
+            <div class="detail-grid"><div class="detail-item"><span>Parent's Name:</span> <strong id="s-parent"></strong></div><div class="detail-item"><span>Contact No:</span> <strong id="s-contact"></strong></div></div>
+        </div>
+        <div class="report-footer no-print"><button class="btn" onclick="printReport()">Print Report</button></div>
+    </div>
+
+    <div id="lecturerReportView" class="report-view">
+        <button class="close-btn no-print" onclick="closeReports()">&times;</button>
+        <div class="report-masthead">
+            <div class="report-photo"><img id="l-photo" src="" alt="Lecturer Photo"></div>
+            <div class="report-basic-info"><h4 id="l-name"></h4><p><span id="l-id"></span> | <span id="l-dept"></span></p></div>
+        </div>
+        <div class="report-body">
+            <h5>Professional Details</h5>
+            <div class="detail-grid"><div class="detail-item"><span>Qualifications:</span> <strong id="l-qual"></strong></div><div class="detail-item"><span>Date of Joining:</span> <strong id="l-doj"></strong></div><div class="detail-item"><span>Experience:</span> <strong id="l-exp"></strong></div><div class="detail-item"><span>Subjects:</span> <strong id="l-subjects"></strong></div></div>
+            <h5>Performance Metrics</h5>
+            <div class="detail-grid"><div class="detail-item"><span>Attendance:</span> <strong id="l-attendance"></strong></div><div class="detail-item"><span>Classes Taken:</span> <strong id="l-classes"></strong></div><div class="detail-item"><span>On Leave:</span> <strong id="l-leave"></strong></div><div class="detail-item"><span>Student Feedback:</span> <strong id="l-feedback"></strong></div></div>
+        </div>
+        <div class="report-footer no-print"><button class="btn" onclick="printReport()">Print Report</button></div>
+    </div>
+
+    <script>
+        const studentData = { 's1': { name: 'Rohan Patel', id: '4JC22CS001', branch: 'Computer Science', section: 'A', year: '3rd Year', attendance: '85%', cgpa: '8.9', proctor: 'Dr. Anand Kumar', backlogs: '0', parent: 'Rajesh Patel', contact: '9876543210', photo: 'https://i.imgur.com/8b23K1D.jpg' }, 's2': { name: 'Meera Iyer', id: '4JC22EC002', branch: 'Electronics', section: 'B', year: '3rd Year', attendance: '92%', cgpa: '9.1', proctor: 'Prof. Priya Sharma', backlogs: '0', parent: 'Suresh Iyer', contact: '9876543211', photo: 'https://i.imgur.com/JFHjd2z.jpg' }, 's3': { name: 'Kiran Nayak', id: '4JC22ME003', branch: 'Mechanical', section: 'A', year: '3rd Year', attendance: '78%', cgpa: '7.5', proctor: 'Prof. Vikram Hegde', backlogs: '1', parent: 'Mohan Nayak', contact: '9876543212', photo: 'https://i.imgur.com/8b23K1D.jpg' }, 's4': { name: 'Divya Shenoy', id: '4JC22CS004', branch: 'Computer Science', section: 'B', year: '3rd Year', attendance: '95%', cgpa: '9.4', proctor: 'Dr. Anand Kumar', backlogs: '0', parent: 'Prakash Shenoy', contact: '9876543213', photo: 'https://i.imgur.com/JFHjd2z.jpg' }, 's5': { name: 'Arjun Reddy', id: '4JC22CV005', branch: 'Civil', section: 'A', year: '3rd Year', attendance: '81%', cgpa: '8.0', proctor: 'Dr. Lakshmi Menon', backlogs: '0', parent: 'Sunil Reddy', contact: '9876543214', photo: 'https://i.imgur.com/8b23K1D.jpg' } };
+        
+        // LECTURER IDs UPDATED FROM 'EMP' to 'FAC'
+        const lecturerData = {
+            'l1': { name: 'Dr. Anand Kumar', id: 'FAC-101', dept: 'Computer Science', qual: 'Ph.D. in CS', doj: '15-06-2010', exp: '15 Years', attendance: '98%', classes: '38 / 40', leave: '2 days', feedback: '4.8 / 5.0', subjects: 'Data Structures, Algorithms', photo: 'https://i.imgur.com/8b23K1D.jpg' },
+            'l2': { name: 'Prof. Priya Sharma', id: 'FAC-102', dept: 'Electronics', qual: 'M.Tech in VLSI', doj: '22-07-2015', exp: '10 Years', attendance: '95%', classes: '40 / 40', leave: '5 days', feedback: '4.6 / 5.0', subjects: 'Digital Logic, VLSI Design', photo: 'https://i.imgur.com/JFHjd2z.jpg' },
+            'l3': { name: 'Prof. Vikram Hegde', id: 'FAC-103', dept: 'Mechanical', qual: 'M.Tech in Thermo', doj: '01-08-2012', exp: '13 Years', attendance: '99%', classes: '35 / 36', leave: '1 day', feedback: '4.9 / 5.0', subjects: 'Thermodynamics, Fluid Mechanics', photo: 'https://i.imgur.com/8b23K1D.jpg' },
+            'l4': { name: 'Dr. Lakshmi Menon', id: 'FAC-104', dept: 'Civil', qual: 'Ph.D. in Structures', doj: '18-01-2018', exp: '7 Years', attendance: '97%', classes: '39 / 40', leave: '3 days', feedback: '4.7 / 5.0', subjects: 'Structural Analysis, Surveying', photo: 'https://i.imgur.com/JFHjd2z.jpg' }
+        };
+
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const studentReportView = document.getElementById('studentReportView');
+        const lecturerReportView = document.getElementById('lecturerReportView');
+        
+        function openTab(evt, tabName) { var i, tabcontent, tablinks; tabcontent = document.getElementsByClassName("tab-content"); for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; } tablinks = document.getElementsByClassName("tab-link"); for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", "");} document.getElementById(tabName).style.display = "block"; evt.currentTarget.className += " active"; closeReports(); }
+        function showStudentReport(studentId) { const data = studentData[studentId]; document.getElementById('s-photo').src = data.photo; document.getElementById('s-name').textContent = data.name; document.getElementById('s-id').textContent = data.id; document.getElementById('s-branch').textContent = data.branch; document.getElementById('s-section').textContent = data.section; document.getElementById('s-year').textContent = data.year; document.getElementById('s-attendance').textContent = data.attendance; document.getElementById('s-cgpa').textContent = data.cgpa; document.getElementById('s-proctor').textContent = data.proctor; document.getElementById('s-backlogs').textContent = data.backlogs; document.getElementById('s-parent').textContent = data.parent; document.getElementById('s-contact').textContent = data.contact; modalBackdrop.classList.add('active'); studentReportView.classList.add('active'); }
+        function showLecturerReport(lecturerId) { const data = lecturerData[lecturerId]; document.getElementById('l-photo').src = data.photo; document.getElementById('l-name').textContent = data.name; document.getElementById('l-id').textContent = data.id; document.getElementById('l-dept').textContent = data.dept; document.getElementById('l-qual').textContent = data.qual; document.getElementById('l-doj').textContent = data.doj; document.getElementById('l-exp').textContent = data.exp; document.getElementById('l-subjects').textContent = data.subjects; document.getElementById('l-attendance').textContent = data.attendance; document.getElementById('l-classes').textContent = data.classes; document.getElementById('l-leave').textContent = data.leave; document.getElementById('l-feedback').textContent = data.feedback; modalBackdrop.classList.add('active'); lecturerReportView.classList.add('active'); }
+        function closeReports() { modalBackdrop.classList.remove('active'); studentReportView.classList.remove('active'); lecturerReportView.classList.remove('active'); }
+        modalBackdrop.addEventListener('click', closeReports);
+        function printReport() { window.print(); }
+    </script>
+    <script>
+        const userProfile = document.querySelector('.user-profile');
+        if (userProfile) {
+            const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+            userProfile.addEventListener('click', function(event) {
+                dropdownMenu.classList.toggle('active');
+                event.stopPropagation();
+            });
+            window.addEventListener('click', function(event) {
+                if (dropdownMenu && dropdownMenu.classList.contains('active')) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
