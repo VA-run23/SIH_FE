@@ -76,6 +76,8 @@ Tailored interfaces for different stakeholders:
 - Comprehensive analytics dashboards
 - Performance trend analysis
 - Predictive insights for student engagement
+<img width="1881" height="915" alt="image" src="https://github.com/user-attachments/assets/51f10ad3-6c06-4904-a84d-250034e8e718" />
+<img width="1874" height="580" alt="image" src="https://github.com/user-attachments/assets/1f956cf6-27ef-4406-8c45-a7c60817ad56" />
 
 ---
 
@@ -328,3 +330,4 @@ For questions, feature requests, or collaboration opportunities:
 **Developed with ❤️ for Smart India Hackathon 2025**
 
 </div>
+
