@@ -2,7 +2,6 @@
 
 <div align="center">
 
-
 **Problem Statement ID: 25011**  
 *Smart India Hackathon (SIH) Project*
 
@@ -226,25 +225,25 @@ Triple-layered, **anti-proxy attendance system** combining:
 
 1. **Clone the repository**
 ```bash
-   git clone https://github.com/va-run23/SIH_FE.git
-   cd SIH_FE
+git clone https://github.com/va-run23/SIH_FE.git
+cd SIH_FE
 ```
 
 2. **Open portal pages directly in browser**
    
    **Coordinator Portal:**
 ```
-   Co-ordinator_portal/index.html
+Co-ordinator_portal/index.html
 ```
    
    **Principal Portal:**
 ```
-   Principal_portal/index.html
+Principal_portal/index.html
 ```
    
    **Teacher Portal:**
 ```
-   Teacher_Portal/Login.html
+Teacher_Portal/Login.html
 ```
 
 3. **Or visit the live demo**
@@ -301,12 +300,18 @@ We welcome contributions! Please follow these steps:
 
 ## 📄 License
 
-This project is developed for Smart India Hackathon 2024.  
+This project is developed for Smart India Hackathon 2025.  
 Problem Statement ID: **25011**
 
 ---
 
-## 📞 Contact & Credits
+## 👥 Team Credits
+
+> **Note:** The Principal Portal was developed by our teammate [Shreyas08-S](https://github.com/Shreyas08-S). Their repository [sih_sample_frontend](https://github.com/Shreyas08-S/sih_sample_frontend) has been cloned and integrated into this unified prototype for our SIH problem statement.
+
+---
+
+## 📞 Contact
 
 <div align="center">
 
@@ -323,4 +328,3 @@ For questions, feature requests, or collaboration opportunities:
 **Developed with ❤️ for Smart India Hackathon 2025**
 
 </div>
-
