@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Marks - My Classes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .header-nav {
+            color: #1ae3df;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-pills .nav-link {
+            background-color: rgba(255,255,255,0.1);
+            color: #000;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #1ae3df;
+            color: #667eea;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: #1ae3df;
+        }
+
+        .college-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .marks-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .marks-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .marks-table {
+            margin: 0;
+        }
+
+        .marks-table th {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+            text-align: center;
+            vertical-align: middle;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .marks-table td {
+            padding: 12px 8px;
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .marks-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .student-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #6c757d;
+            background: #f8f9fa;
+            margin: 0 auto;
+        }
+
+        .marks-input {
+            width: 100%;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            padding: 5px 8px;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .marks-input:focus {
+            border-color: #1ae3df;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 227, 223, 0.25);
+        }
+
+        .marks-input:disabled {
+            background-color: #f8f9fa;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Color coding for different mark types */
+        .marks-input[data-type="internal1"] {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .marks-input[data-type="internal2"] {
+            background-color: #f3e5f5;
+            border-color: #9c27b0;
+        }
+
+        .marks-input[data-type="assignment"] {
+            background-color: #e8f5e8;
+            border-color: #4caf50;
+        }
+
+        .marks-input[data-type="quiz"] {
+            background-color: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .marks-input[data-type="practical"] {
+            background-color: #fce4ec;
+            border-color: #e91e63;
+        }
+
+        .marks-input[data-type="final"] {
+            background-color: #f1f8e9;
+            border-color: #689f38;
+        }
+
+        .marks-input.highlight {
+            border-color: #ffc107 !important;
+            background-color: #fff3cd !important;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25) !important;
+        }
+
+        .table-responsive-custom {
+            max-height: 60vh;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        .action-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .select-dropdown {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background: white;
+            font-size: 0.9em;
+            min-width: 200px;
+        }
+
+        .select-dropdown:focus {
+            border-color: #1ae3df;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 227, 223, 0.25);
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-pills {
+                flex-wrap: wrap;
+            }
+
+            .nav-pills .nav-link {
+                margin: 2px;
+                font-size: 0.9em;
+            }
+
+            .marks-table th,
+            .marks-table td {
+                padding: 8px 4px;
+                font-size: 0.8em;
+            }
+
+            .student-photo {
+                width: 30px;
+                height: 30px;
+                font-size: 1em;
+            }
+
+            .marks-input {
+                padding: 4px 6px;
+                font-size: 0.8em;
+            }
+
+            .select-dropdown {
+                min-width: 150px;
+                font-size: 0.8em;
+            }
+
+            .filter-section .row > div {
+                margin-bottom: 15px;
+            }
+
+            .mark-type-legend {
+                margin-top: 5px;
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .legend-item {
+                font-size: 0.7em;
+            }
+
+            .legend-color {
+                width: 15px;
+                height: 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filter-section {
+                padding: 15px;
+            }
+
+            .col-lg-3 {
+                margin-bottom: 10px;
+            }
+
+            .mark-type-legend {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .legend-item {
+                font-size: 0.75em;
+            }
+        }
+
+        .mark-type-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 15px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <header class="header-nav">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+ <div style="text-align: center;">
+  <a href="1_homepage_90_Done.html" style="text-decoration: none; color: inherit; font-size: 2em; font-weight: bold;">College Name</a>
+</div>
+
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Navigation Pills -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./2_todaysSchedule.html"><i class="fas fa-calendar-day me-2"></i>Today's Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./3_weeklyTimetable.html"><i class="fas fa-table me-2"></i>Complete Time Table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./4_myClasses_Done.html"><i class="fas fa-book me-2"></i>My Classes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Marks Container -->
+        <div class="marks-container">
+            <h5 class="marks-header">
+                <i class="fas fa-clipboard-list me-2"></i>Enter Marks - My Classes
+            </h5>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 col-md-6 mb-2">
+                        <label class="form-label mb-1 fw-bold">Select marks to edit:</label>
+                        <select class="select-dropdown w-100" id="marksToUpdate">
+                            <option value="all">All Marks</option>
+                            <option value="internal1">Internal Test 1</option>
+                            <option value="internal2">Internal Test 2</option>
+                            <option value="assignment">Assignment Marks</option>
+                            <option value="quiz">Quiz Marks</option>
+                            <option value="practical">Experiential Learning</option>
+                            <option value="final">Final Assessment</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-2">
+                        <label class="form-label mb-1 fw-bold">Select marks to view-only:</label>
+                        <select class="select-dropdown w-100" id="marksToView">
+                            <option value="all">All Marks</option>
+                            <option value="internal1">Internal Test 1</option>
+                            <option value="internal2">Internal Test 2</option>
+                            <option value="assignment">Assignment Marks</option>
+                            <option value="quiz">Quiz Marks</option>
+                            <option value="practical">Experiential Learning</option>
+                            <option value="final">Final Assessment</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="d-flex align-items-center">
+                            <div class="mark-type-legend me-3 mb-0">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #e3f2fd; border-color: #2196f3;"></div>
+                                    <span>Test 1</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f3e5f5; border-color: #9c27b0;"></div>
+                                    <span>Test 2</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #e8f5e8; border-color: #4caf50;"></div>
+                                    <span>Assignment</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #fff3e0; border-color: #ff9800;"></div>
+                                    <span>Quiz</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #fce4ec; border-color: #e91e63;"></div>
+                                    <span>Experiential</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f1f8e9; border-color: #689f38;"></div>
+                                    <span>Final</span>
+                                </div>
+                            </div>
+                            <div class="ms-2">
+                                <label for="enterNavMode" class="form-label mb-1 fw-bold">Enter key navigation:</label>
+                                <select id="enterNavMode" class="form-select form-select-sm" style="min-width: 180px;">
+                                    <option value="row">Move to next column (row-wise)</option>
+                                    <option value="col">Move to next row (column-wise)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marks Table -->
+            <div class="table-responsive-custom">
+                <table class="table table-hover marks-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">Sr No</th>
+                            <th style="width: 12%;">USN</th>
+                            <th style="width: 20%;">Student Name</th>
+                            <th style="width: 12%;">Photo</th>
+                            <th style="width: 48%;" id="marksColumnHeader">All Marks (CIE)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- Students will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-success me-2" id="saveMarksBtn">
+                            <i class="fas fa-save me-2"></i>Save All Marks
+                        </button>
+                        <button class="btn btn-info me-2" id="calculateGradesBtn">
+                            <i class="fas fa-calculator me-2"></i>Calculate Grades
+                        </button>
+                        <button class="btn btn-warning me-2" id="exportBtn">
+                            <i class="fas fa-download me-2"></i>Export Results
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                        <button class="btn btn-outline-primary me-2" id="bulkUpdateBtn">
+                            <i class="fas fa-edit me-2"></i>Bulk Update
+                        </button>
+                        <button class="btn btn-outline-secondary" id="resetMarksBtn">
+                            <i class="fas fa-undo me-2"></i>Reset All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Enter navigation mode: 'row' (default) or 'col'
+        let enterNavMode = 'row';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navModeSelect = document.getElementById('enterNavMode');
+            navModeSelect.addEventListener('change', function() {
+                enterNavMode = navModeSelect.value;
+            });
+        });
+
+        // Custom Enter key navigation for marks inputs
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.classList.contains('marks-input')) {
+                e.preventDefault();
+                const inputs = Array.from(document.querySelectorAll('.marks-input:not([disabled])'));
+                const idx = inputs.indexOf(e.target);
+                if (idx === -1) return;
+                if (enterNavMode === 'row') {
+                    // Move to next input in the same row (next column for this student)
+                    const currentRow = e.target.closest('tr');
+                    const rowInputs = Array.from(currentRow.querySelectorAll('.marks-input:not([disabled])'));
+                    const rowIdx = rowInputs.indexOf(e.target);
+                    if (rowIdx !== -1 && rowIdx < rowInputs.length - 1) {
+                        rowInputs[rowIdx + 1].focus();
+                        rowInputs[rowIdx + 1].select();
+                    } else {
+                        // If at end of row, move to first input of next row
+                        const nextRow = currentRow.nextElementSibling;
+                        if (nextRow) {
+                            const nextRowInputs = Array.from(nextRow.querySelectorAll('.marks-input:not([disabled])'));
+                            if (nextRowInputs.length > 0) {
+                                nextRowInputs[0].focus();
+                                nextRowInputs[0].select();
+                            }
+                        }
+                    }
+                } else if (enterNavMode === 'col') {
+                    // Move to next input in the same column (next student for this mark type)
+                    const allInputs = Array.from(document.querySelectorAll('.marks-input:not([disabled])'));
+                    // Find all inputs with same data-type
+                    const type = e.target.getAttribute('data-type');
+                    const colInputs = allInputs.filter(inp => inp.getAttribute('data-type') === type);
+                    const colIdx = colInputs.indexOf(e.target);
+                    if (colIdx !== -1 && colIdx < colInputs.length - 1) {
+                        colInputs[colIdx + 1].focus();
+                        colInputs[colIdx + 1].select();
+                    } else {
+                        // If at end of column, move to first input of next column in this row
+                        const currentRow = e.target.closest('tr');
+                        const rowInputs = Array.from(currentRow.querySelectorAll('.marks-input:not([disabled])'));
+                        const rowIdx = rowInputs.indexOf(e.target);
+                        if (rowIdx !== -1 && rowIdx < rowInputs.length - 1) {
+                            rowInputs[rowIdx + 1].focus();
+                            rowInputs[rowIdx + 1].select();
+                        }
+                    }
+                }
+            }
+        });
+        // Sample student data
+        const studentsData = [
+            { 
+                srNo: 1, 
+                usn: '4NT23AI018', 
+                name: 'Abhi Kumar', 
+                photo: 'AB',
+                marks: {
+                    internal1: 85,
+                    internal2: 78,
+                    assignment: 92,
+                    quiz: 88,
+                    practical: 90,
+                    final: 82
+                }
+            },
+            { 
+                srNo: 2, 
+                usn: '4NT23AI019', 
+                name: 'Priya Sharma', 
+                photo: 'PS',
+                marks: {
+                    internal1: 76,
+                    internal2: 80,
+                    assignment: 85,
+                    quiz: 79,
+                    practical: 88,
+                    final: 75
+                }
+            },
+            { 
+                srNo: 3, 
+                usn: '4NT23AI020', 
+                name: 'Rahul Kumar', 
+                photo: 'RK',
+                marks: {
+                    internal1: 92,
+                    internal2: 89,
+                    assignment: 94,
+                    quiz: 91,
+                    practical: 93,
+                    final: 90
+                }
+            },
+            { 
+                srNo: 4, 
+                usn: '4NT23AI021', 
+                name: 'Sneha Patel', 
+                photo: 'SP',
+                marks: {
+                    internal1: 68,
+                    internal2: 72,
+                    assignment: 75,
+                    quiz: 70,
+                    practical: 78,
+                    final: 69
+                }
+            },
+            { 
+                srNo: 5, 
+                usn: '4NT23AI022', 
+                name: 'Arjun Singh', 
+                photo: 'AS',
+                marks: {
+                    internal1: 81,
+                    internal2: 85,
+                    assignment: 88,
+                    quiz: 83,
+                    practical: 87,
+                    final: 84
+                }
+            },
+            { 
+                srNo: 6, 
+                usn: '4NT23AI023', 
+                name: 'Maya Reddy', 
+                photo: 'MR',
+                marks: {
+                    internal1: 95,
+                    internal2: 92,
+                    assignment: 97,
+                    quiz: 94,
+                    practical: 96,
+                    final: 93
+                }
+            }
+        ];
+
+        // Mark type labels for display
+        const markTypeLabels = {
+            internal1: 'Test 1',
+            internal2: 'Test 2',
+            assignment: 'Assignment',
+            quiz: 'Quiz',
+            practical: 'Experiential',
+            final: 'Final'
+        };
+
+    let currentUpdateType = 'all';
+    let currentViewType = 'all';
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            renderStudentsTable();
+            setupEventListeners();
+            updateDropdownOptions(); // Initialize dropdown options
+        });
+
+        function renderStudentsTable() {
+            const tableBody = document.getElementById('studentsTableBody');
+            tableBody.innerHTML = '';
+
+            studentsData.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${student.srNo}</strong></td>
+                    <td><strong>${student.usn}</strong></td>
+                    <td><strong>${student.name}</strong></td>
+                    <td>
+                        <div class="student-photo">
+                            ${student.photo}
+                        </div>
+                    </td>
+                    <td>
+                        ${renderMarksInputs(student)}
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            updateMarksVisibility();
+        }
+
+        function renderMarksInputs(student) {
+            const allTypes = ['internal1','internal2','assignment','quiz','practical','final'];
+            // Determine which columns to show: union of edit and view, no duplicates
+            let editTypes = [];
+            let viewTypes = [];
+            if (currentUpdateType === 'all') {
+                editTypes = allTypes.slice();
+            } else if (currentUpdateType) {
+                editTypes = [currentUpdateType];
+            }
+            if (currentViewType === 'all') {
+                viewTypes = allTypes.slice();
+            } else if (currentViewType) {
+                viewTypes = [currentViewType];
+            }
+            // Union, edit types first, then view types not in edit
+            let typesToShow = [...editTypes];
+            viewTypes.forEach(type => {
+                if (!typesToShow.includes(type)) typesToShow.push(type);
+            });
+            // If nothing selected, show all
+            if (typesToShow.length === 0) typesToShow = allTypes;
+            let html = '<div class="d-flex flex-row flex-wrap justify-content-center align-items-center gap-2">';
+            typesToShow.forEach(type => {
+                // Editable if in editTypes
+                let editable = editTypes.includes(type);
+                html += `
+                    <div class="d-flex flex-column align-items-center">
+                        <label class="form-label text-muted small mb-0">${markTypeLabels[type]}</label>
+                        <input type="number" style="width: 70px; min-width: 55px;" class="marks-input ${editable ? 'highlight' : ''}" 
+                            data-student="${student.srNo}" data-type="${type}" 
+                            value="${student.marks[type]}" min="0" max="100" 
+                            placeholder="${markTypeLabels[type]}"
+                            ${editable ? '' : 'disabled'}>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function updateMarksVisibility() {
+            const headerElement = document.getElementById('marksColumnHeader');
+            // Show header reflecting both edit and view columns
+            let editLabel = (currentUpdateType === 'all') ? 'All Marks' : (markTypeLabels[currentUpdateType] || '');
+            let viewLabel = (currentViewType === 'all') ? 'All Marks' : (markTypeLabels[currentViewType] || '');
+            if (editLabel && viewLabel && editLabel !== viewLabel) {
+                headerElement.textContent = `${editLabel} (Edit) + ${viewLabel} (View)`;
+            } else if (editLabel) {
+                headerElement.textContent = `${editLabel} (CIE)`;
+            } else if (viewLabel) {
+                headerElement.textContent = `${viewLabel} (CIE)`;
+            } else {
+                headerElement.textContent = 'All Marks (CIE)';
+            }
+        }
+
+        function setupEventListeners() {
+            // Marks input change listeners
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('marks-input') && !e.target.disabled) {
+                    updateStudentMarks(e.target);
+                }
+            });
+
+            // Action buttons
+            document.getElementById('saveMarksBtn').addEventListener('click', saveAllMarks);
+            document.getElementById('calculateGradesBtn').addEventListener('click', calculateOverallGrades);
+            document.getElementById('exportBtn').addEventListener('click', exportResults);
+            document.getElementById('bulkUpdateBtn').addEventListener('click', bulkUpdate);
+            document.getElementById('resetMarksBtn').addEventListener('click', resetAllMarks);
+
+            // Filter dropdowns with dynamic restrictions
+            document.getElementById('marksToUpdate').addEventListener('change', handleMarksUpdateFilter);
+            document.getElementById('marksToView').addEventListener('change', handleViewFilter);
+        }
+
+        function updateStudentMarks(input) {
+            const studentId = parseInt(input.dataset.student);
+            const markType = input.dataset.type;
+            const value = parseInt(input.value) || 0;
+
+            // Validate input
+            if (value < 0 || value > 100) {
+                input.value = Math.max(0, Math.min(100, value));
+                return;
+            }
+
+            // Find student and update marks
+            const student = studentsData.find(s => s.srNo === studentId);
+            if (student) {
+                student.marks[markType] = value;
+                // Add visual feedback based on performance
+                if (value >= 80) {
+                    input.style.backgroundColor = input.style.backgroundColor.replace('0.3', '0.6');
+                } else if (value >= 60) {
+                    input.style.backgroundColor = input.style.backgroundColor.replace('0.3', '0.4');
+                } else {
+                    input.style.backgroundColor = '#ffebee';
+                }
+                // No notification here
+            }
+        }
+
+        function updateDropdownOptions() {
+            // For multi-select, no need to update options dynamically
+        }
+
+        function updateViewDropdownOptions(viewDropdown, editValue) {
+            const currentValue = viewDropdown.value;
+            // Only allow 'all' or types not selected in edit
+            const allTypes = [
+                { value: 'internal1', label: 'Internal Test 1' },
+                { value: 'internal2', label: 'Internal Test 2' },
+                { value: 'assignment', label: 'Assignment Marks' },
+                { value: 'quiz', label: 'Quiz Marks' },
+                { value: 'practical', label: 'Experiential Learning' },
+                { value: 'final', label: 'Final Assessment' }
+            ];
+            let html = `<option value="all">All Marks</option>`;
+            allTypes.forEach(type => {
+                if (!editValue || editValue === 'all' || type.value !== editValue) {
+                    html += `<option value="${type.value}">${type.label}</option>`;
+                }
+            });
+            viewDropdown.innerHTML = html;
+            // Restore previous selection if still valid
+            if (currentValue && [...viewDropdown.options].some(option => option.value === currentValue)) {
+                viewDropdown.value = currentValue;
+            } else {
+                viewDropdown.value = 'all';
+            }
+        }
+
+        function updateEditDropdownOptions(editDropdown, viewValue) {
+            const currentValue = editDropdown.value;
+            // Only allow '' (choose), 'all', or types not selected in view
+            const allTypes = [
+                { value: 'internal1', label: 'Internal Test 1' },
+                { value: 'internal2', label: 'Internal Test 2' },
+                { value: 'assignment', label: 'Assignment Marks' },
+                { value: 'quiz', label: 'Quiz Marks' },
+                { value: 'practical', label: 'Experiential Learning' },
+                { value: 'final', label: 'Final Assessment' }
+            ];
+            let html = `<option value="">Choose type to edit...</option>`;
+            allTypes.forEach(type => {
+                if (!viewValue || viewValue === 'all' || type.value !== viewValue) {
+                    html += `<option value="${type.value}">${type.label}</option>`;
+                }
+            });
+            html += `<option value="all">All Marks</option>`;
+            editDropdown.innerHTML = html;
+            // Restore previous selection if still valid
+            if (currentValue && [...editDropdown.options].some(option => option.value === currentValue)) {
+                editDropdown.value = currentValue;
+            } else {
+                editDropdown.value = '';
+            }
+        }
+
+        function handleMarksUpdateFilter() {
+            const updateDropdown = document.getElementById('marksToUpdate');
+            currentUpdateType = updateDropdown.value;
+            renderStudentsTable();
+        }
+
+        function handleViewFilter() {
+            const viewDropdown = document.getElementById('marksToView');
+            currentViewType = viewDropdown.value;
+            renderStudentsTable();
+            let typeName = currentViewType === 'all' ? 'All Marks' : markTypeLabels[currentViewType];
+            showToast('Info', `Now viewing: ${typeName}`, 'info');
+        }
+
+        function saveAllMarks() {
+            const marksData = {
+                timestamp: new Date().toISOString(),
+                students: studentsData.map(student => ({
+                    usn: student.usn,
+                    name: student.name,
+                    marks: student.marks,
+                    average: Object.values(student.marks).reduce((a, b) => a + b, 0) / 6
+                }))
+            };
+
+            console.log('Marks saved:', marksData);
+            showToast('Success', 'All marks have been saved successfully!', 'success');
+        }
+
+        function calculateOverallGrades() {
+            let gradeDistribution = { 'A+': 0, 'A': 0, 'B+': 0, 'B': 0, 'C': 0, 'F': 0 };
+            let totalAverage = 0;
+
+            studentsData.forEach(student => {
+                const marks = student.marks;
+                const average = Object.values(marks).reduce((a, b) => a + b, 0) / 6;
+                const grade = getGradeFromMarks(average);
+                gradeDistribution[grade]++;
+                totalAverage += average;
+            });
+
+            const overallAverage = (totalAverage / studentsData.length).toFixed(2);
+            
+            let message = `Class Average: ${overallAverage}%\n`;
+            Object.entries(gradeDistribution).forEach(([grade, count]) => {
+                if (count > 0) message += `${grade}: ${count} students\n`;
+            });
+
+            showToast('Grade Analysis', message, 'info');
+        }
+
+        function getGradeFromMarks(average) {
+            if (average >= 90) return 'A+';
+            if (average >= 80) return 'A';
+            if (average >= 70) return 'B+';
+            if (average >= 60) return 'B';
+            if (average >= 50) return 'C';
+            return 'F';
+        }
+
+        function exportResults() {
+            let csvContent = "USN,Name,Test1,Test2,Assignment,Quiz,Experiential,Final,Average,Grade\n";
+
+            studentsData.forEach(student => {
+                const average = Object.values(student.marks).reduce((a, b) => a + b, 0) / 6;
+                const grade = getGradeFromMarks(average);
+
+                csvContent += `${student.usn},${student.name},${student.marks.internal1},${student.marks.internal2},${student.marks.assignment},${student.marks.quiz},${student.marks.practical},${student.marks.final},${average.toFixed(2)},${grade}\n`;
+            });
+
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'student_marks_export.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            showToast('Success', 'Marks exported successfully!', 'info');
+        }
+
+        function bulkUpdate() {
+            if (!currentUpdateType || currentUpdateType === '') {
+                showToast('Warning', 'Please select a mark type to update first!', 'warning');
+                return;
+            }
+
+            const value = prompt(`Enter marks value for ${markTypeLabels[currentUpdateType] || 'selected type'} (0-100):`);
+
+            if (value && !isNaN(value)) {
+                const numValue = parseInt(value);
+                if (numValue >= 0 && numValue <= 100) {
+                    if (currentUpdateType === 'all') {
+                        // Update all mark types
+                        studentsData.forEach(student => {
+                            Object.keys(student.marks).forEach(markType => {
+                                student.marks[markType] = numValue;
+                            });
+                        });
+                    } else {
+                        // Update specific mark type
+                        studentsData.forEach(student => {
+                            student.marks[currentUpdateType] = numValue;
+                        });
+                    }
+
+                    renderStudentsTable();
+                    const typeName = currentUpdateType === 'all' ? 'all marks' : markTypeLabels[currentUpdateType];
+                    showToast('Success', `Bulk update completed for ${typeName}!`, 'success');
+                } else {
+                    showToast('Error', 'Please enter a valid marks value between 0-100', 'error');
+                }
+            }
+        }
+
+        function resetAllMarks() {
+            if (confirm('Are you sure you want to reset all marks to 0? This action cannot be undone.')) {
+                studentsData.forEach(student => {
+                    Object.keys(student.marks).forEach(key => {
+                        student.marks[key] = 0;
+                    });
+                });
+
+                renderStudentsTable();
+                showToast('Warning', 'All marks have been reset to 0!', 'warning');
+            }
+        }
+
+        function showToast(title, message, type) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+            
+            const bgClass = type === 'success' ? 'bg-success' : 
+                           type === 'warning' ? 'bg-warning' : 
+                           type === 'error' ? 'bg-danger' : 'bg-info';
+            
+            const iconClass = type === 'success' ? 'fa-check-circle' : 
+                             type === 'warning' ? 'fa-exclamation-triangle' : 
+                             type === 'error' ? 'fa-times-circle' : 'fa-info-circle';
+
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = 'toast show mb-2';
+            toast.setAttribute('role', 'alert');
+            toast.style.minWidth = '300px';
+
+            toast.innerHTML = `
+                <div class="toast-header ${bgClass} text-white">
+                    <i class="fas ${iconClass} me-2"></i>
+                    <strong class="me-auto">${title}</strong>
+                    <small class="text-white-50">${new Date().toLocaleTimeString()}</small>
+                    <button type="button" class="btn-close btn-close-white ms-2" onclick="document.getElementById('${toastId}').remove()"></button>
+                </div>
+                <div class="toast-body">
+                    ${message.replace(/\n/g, '<br>')}
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            // Auto-remove toast after 5 seconds
+            setTimeout(() => {
+                if (document.getElementById(toastId)) {
+                    document.getElementById(toastId).remove();
+                }
+            }, 5000);
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveAllMarks();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportResults();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            resetAllMarks();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Add input validation
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('marks-input')) {
+                const value = parseInt(e.target.value);
+                if (value > 100) {
+                    e.target.value = 100;
+                } else if (value < 0) {
+                    e.target.value = 0;
+                }
+            }
+        });
+
+        // Initialize tooltips for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add helpful tooltips
+            document.querySelectorAll('.select-dropdown').forEach(element => {
+                element.title = 'Use this dropdown to filter and control mark editing';
+            });
+            
+            // Show keyboard shortcuts hint
+            setTimeout(() => {
+                showToast('Tip', 'Keyboard shortcuts: Ctrl+S (Save), Ctrl+E (Export), Ctrl+Shift+R (Reset)', 'info');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

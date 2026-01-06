@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: Classroom Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional style for the total seats display */
+        .total-seats-display {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #2c3e50;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .form-container {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Coordinator Portal</div>
+        <ul class="nav-menu">
+            <li><a href="announcements.html" class="nav-item">Announcements</a></li>
+            <li><a href="user_management.html" class="nav-item">User Management</a></li>
+            <li><a href="classroom_management.html" class="nav-item active">Classroom Management</a></li>
+            <li><a href="course_management.html" class="nav-item">Course Management</a></li>
+            <li><a href="timetable.html" class="nav-item">Timetable</a></li>
+            <li><a href="cie_management.html" class="nav-item">CIE Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="classroom-management" class="content-section">
+            <h2 class="section-title">Classroom Management</h2>
+            
+            <div class="form-container">
+                <h3>Add or Update Classroom</h3>
+                <form id="classroom-form">
+                    <div class="form-group">
+                        <label for="classroom-number">Classroom Number:</label>
+                        <input type="text" id="classroom-number" placeholder="e.g., A-101" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rows-input">Number of Rows:</label>
+                        <input type="number" id="rows-input" min="1" placeholder="e.g., 5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cols-input">Number of Columns:</label>
+                        <input type="number" id="cols-input" min="1" placeholder="e.g., 6" required>
+                    </div>
+
+                    <div class="total-seats-display">
+                        <strong>Total Seats:</strong> <span id="total-seats-display">0</span>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" style="margin-top: 20px;">Save Classroom</button>
+                </form>
+            </div>
+
+            <h3>Existing Classrooms</h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Classroom No.</th>
+                            <th>Rows</th>
+                            <th>Columns</th>
+                            <th>Total Seats</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classroom-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const classroomForm = document.getElementById('classroom-form');
+            const classroomNumberInput = document.getElementById('classroom-number');
+            const rowsInput = document.getElementById('rows-input');
+            const colsInput = document.getElementById('cols-input');
+            const totalSeatsDisplay = document.getElementById('total-seats-display');
+            const classroomTableBody = document.getElementById('classroom-table-body');
+
+            // --- Data Store ---
+            let classrooms = [
+                { id: 'A-101', rows: 5, cols: 6 },
+                { id: 'B-204', rows: 7, cols: 5 },
+                { id: 'C-LAB', rows: 4, cols: 4 }
+            ];
+
+            // --- Functions ---
+            function calculateTotalSeats() {
+                const rows = parseInt(rowsInput.value) || 0;
+                const cols = parseInt(colsInput.value) || 0;
+                totalSeatsDisplay.textContent = rows * cols;
+            }
+
+            function renderClassroomTable() {
+                classroomTableBody.innerHTML = ''; // Clear existing table data
+
+                if (classrooms.length === 0) {
+                    const row = `<tr><td colspan="4" style="text-align: center;">No classrooms have been saved.</td></tr>`;
+                    classroomTableBody.innerHTML = row;
+                    return;
+                }
+
+                classrooms.forEach(room => {
+                    const total = room.rows * room.cols;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${room.id}</td>
+                        <td>${room.rows}</td>
+                        <td>${room.cols}</td>
+                        <td>${total}</td>
+                    `;
+                    classroomTableBody.appendChild(row);
+                });
+            }
+            
+            function handleSave(event) {
+                event.preventDefault(); // Prevent form from reloading the page
+
+                const id = classroomNumberInput.value;
+                const rows = parseInt(rowsInput.value);
+                const cols = parseInt(colsInput.value);
+
+                if (!id || !rows || !cols) {
+                    alert('Please fill out all fields.');
+                    return;
+                }
+                
+                // Check if classroom already exists to update it, otherwise add new
+                const existingIndex = classrooms.findIndex(room => room.id.toLowerCase() === id.toLowerCase());
+
+                if (existingIndex > -1) {
+                    // Update existing classroom
+                    classrooms[existingIndex] = { id, rows, cols };
+                } else {
+                    // Add new classroom
+                    classrooms.push({ id, rows, cols });
+                }
+
+                alert(`Classroom "${id}" saved successfully!`);
+                
+                renderClassroomTable(); // Refresh the table
+                classroomForm.reset(); // Clear the form fields
+                calculateTotalSeats(); // Reset the total seats display
+            }
+
+            // --- Event Listeners ---
+            rowsInput.addEventListener('input', calculateTotalSeats);
+            colsInput.addEventListener('input', calculateTotalSeats);
+            classroomForm.addEventListener('submit', handleSave);
+
+            // --- Initial Render ---
+            renderClassroomTable();
+        });
+    </script>
+
+</body>
+</html>

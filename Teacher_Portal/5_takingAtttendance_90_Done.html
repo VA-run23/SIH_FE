@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Attendance - My Classes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        .header-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-pills .nav-link {
+            background-color: rgba(255,255,255,0.1);
+            color: black;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #1ae3df;
+            color: #667eea;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .college-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .attendance-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .attendance-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px 30px;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            min-height: calc(100vh - 300px);
+            gap: 0;
+        }
+
+        /* Left Section - QR + Info + Seating + Timer - 60% width */
+        .left-section {
+            width: 60%;
+            min-width: 340px;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        /* QR and Info Row */
+        .qr-info-row {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            border-bottom: 1px solid #dee2e6;
+            align-items: flex-start;
+        }
+
+        /* QR Container - Enlarged to 700px */
+        .qr-container {
+            flex: 0 0 700px;
+            height: 500px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Make QR code image responsive */
+        .qr-container img, .qr-container canvas {
+            max-width: 95%;
+            max-height: 95%;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+
+        /* Info Table - Made narrower */
+        .info-table {
+            flex: 0 0 200px;
+            min-width: 180px;
+            max-width: 220px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-left: 10px;
+        }
+
+        .info-table table {
+            margin: 0;
+            font-size: 0.9em;
+            width: 100%;
+        }
+
+        .info-table td:first-child {
+            font-weight: 600;
+            color: #495057;
+            width: 45%;
+            padding: 6px 8px;
+            font-size: 0.85em;
+        }
+
+        .info-table td:last-child {
+            color: #333;
+            font-weight: 600;
+            padding: 6px 8px;
+            font-size: 0.85em;
+        }
+
+        /* Seating Arrangement */
+        .seating-section {
+            flex: 1;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .seating-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .seat {
+            height: 40px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .seat:hover {
+            border-color: #667eea;
+            background: #e3f2fd;
+            transform: scale(1.05);
+        }
+
+        .seat.taken {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .seat.conflict {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Timer Control Section */
+        .timer-section {
+            padding: 20px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .timer-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .timer-display {
+            background: #1a1a1a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 160px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .timer-control-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timer-control-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .timer-control-btn.stop {
+            background: #dc3545;
+        }
+
+        .timer-control-btn.stop:hover {
+            background: #c82333;
+        }
+
+        .timer-control-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .conflict-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .switch-label {
+            font-size: 1em;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .form-check-input {
+            width: 3.2em;
+            height: 1.6em;
+        }
+
+        .form-check-input:checked {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        /* Right Section - Student List - 40% width */
+        .right-section {
+            width: 40%;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .student-list-header {
+            background: #f8f9fa;
+            padding: 18px 25px;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1em;
+        }
+
+        .student-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            max-height: calc(100vh - 50px);
+        }
+
+        /* Enhanced Student Row Layout */
+        .student-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85em;
+            gap: 8px;
+        }
+
+        .student-row:hover {
+            background: #f8f9fa;
+        }
+
+        .student-row.present {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+
+        /* Serial Number */
+        .serial-number {
+            flex: 0 0 25px;
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.8em;
+            text-align: center;
+        }
+
+        /* Student Thumbnail */
+        .student-thumbnail {
+            flex: 0 0 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+            object-fit: cover;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .student-thumbnail:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        /* Student Info Container */
+        .student-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Allows text truncation */
+            margin-left: 6px;
+        }
+
+        .student-id {
+            font-weight: 700;
+            color: #333;
+            font-size: 0.9em;
+            line-height: 1.2;
+        }
+
+        .student-name {
+            color: #6c757d;
+            font-size: 0.75em;
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Seat Number Display */
+        .seat-number {
+            flex: 0 0 35px;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: #495057;
+            background: #e9ecef;
+            border-radius: 12px;
+            padding: 2px 6px;
+            text-align: center;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+        }
+
+        .seat-number.assigned {
+            background: #28a745;
+            color: white;
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            flex: 0 0 12px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #dc3545;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.present {
+            background: #28a745;
+        }
+
+        /* Live Count Section */
+        .live-count-section {
+            background: #f8f9fa;
+            padding: 18px 25px;
+            border-top: 2px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 32px;
+        }
+
+        .count-badge {
+            background: #28a745;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .total-badge {
+            background: #6c757d;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        /* Timer Status Indicator */
+        .timer-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .status-dot.paused {
+            background: #ffc107;
+            animation: none;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .qr-container {
+                flex: 0 0 500px;
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .qr-container {
+                flex: 0 0 400px;
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .left-section, .right-section {
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+            }
+
+            .qr-info-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .qr-container {
+                flex: none;
+                align-self: center;
+                width: 300px;
+                height: 300px;
+            }
+
+            .info-table {
+                margin-left: 0;
+                flex: none;
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .seat-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .timer-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .timer-controls {
+                justify-content: center;
+            }
+
+            .nav-pills .nav-link {
+                margin: 2px;
+                font-size: 0.9em;
+            }
+
+            .student-thumbnail {
+                flex: 0 0 28px;
+                height: 28px;
+            }
+
+            .serial-number {
+                flex: 0 0 20px;
+                font-size: 0.75em;
+            }
+
+            .seat-number {
+                flex: 0 0 30px;
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <header class="header-nav">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="college-name text-center">College Name - Live Attendance System</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Navigation Pills -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link " href="./2_todaysSchedule.html"><i class="fas fa-calendar-day me-2"></i>Today's Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./3_weeklyTimetable.html"><i class="fas fa-table me-2"></i>Weekly Time Table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./4_myClasses_Done.html"><i class="fas fa-book me-2"></i>My Classes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Attendance Container -->
+        <div class="attendance-container">
+            <h5 class="attendance-header">
+                <i class="fas fa-qrcode me-2"></i>Live QR Attendance System
+            </h5>
+
+            <div class="main-layout">
+                <!-- Left Section -->
+                <div class="left-section" style="display: flex; flex-direction: column;">
+                    <!-- QR Code Row Only -->
+                    <div class="qr-info-row" style="justify-content: center;">
+                        <div class="qr-container" id="qrCodeContainer">
+                            <!-- QR Code will be generated here -->
+                        </div>
+                    </div>
+                    <!-- Seating Arrangement -->
+                    <div class="seating-section">
+                        <div class="seating-title">
+                            <i class="fas fa-th me-2"></i>Seating Arrangement
+                        </div>
+                        <div class="seat-grid" id="seatGrid">
+                            <!-- Seats will be generated by JavaScript -->
+                        </div>
+                    </div>
+                    <!-- Timer Controls and Conflict Switch -->
+                    <div class="timer-section">
+                        <div class="timer-controls">
+                            <div class="timer-display" id="remainingTime">
+                                60 seconds
+                            </div>
+                            <div class="timer-display" id="timerDisplay">
+                                60 seconds
+                            </div>
+                            <button class="timer-control-btn" id="startBtn" onclick="startTimer()">
+                                <i class="fas fa-play"></i> Start
+                            </button>
+                            <button class="timer-control-btn stop" id="stopBtn" onclick="stopTimer()" disabled>
+                                <i class="fas fa-pause"></i> Stop
+                            </button>
+                            <div class="timer-status">
+                                <div class="status-dot" id="statusDot"></div>
+                                <span id="timerStatus">Ready</span>
+                            </div>
+                        </div>
+                        <div class="conflict-switch">
+                            <span class="switch-label">Show Seat Conflicts</span>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="conflictSwitch" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section - Student List -->
+                <div class="right-section">
+                    <div class="student-list-header">
+                        <i class="fas fa-users me-2"></i>Live Student Attendance
+                    </div>
+                    <div class="student-list-container" id="studentListContainer">
+                        <!-- Student list will be populated by JavaScript -->
+                    </div>
+                    <div class="live-count-section">
+                        <div class="count-badge" id="presentBadge">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="presentCount">0</span> Present
+                        </div>
+
+                        <div class="total-badge">
+                            Total: <span id="totalCount">31</span>
+                        </div>
+                        <button class="btn btn-danger" id="customGreenBtn" style="font-weight:600; font-size:1em; padding: 12px 32px; border-radius: 25px;">
+                            <i class="fas fa-check-circle me-2"></i>Notify Absentees
+                        </button>
+                        <button class="btn btn-success" id="customGreenBtn" style="font-weight:600; font-size:1em; padding: 12px 32px; border-radius: 25px;">
+                            <i class="fas fa-check-circle me-2"></i>Confirm Attendance
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    // Configuration
+    const QR_REFRESH_INTERVAL = 6; // seconds
+        const TOTAL_SEATS = 40;
+        
+        // Enhanced student data with image paths and seat assignments
+        const students = [
+            { id: '1RV21CS001', name: 'ALICE JOHNSON', image: 'https://via.placeholder.com/64/4285f4/ffffff?text=AJ', seat: null },
+            { id: '1RV21CS002', name: 'BOB SMITH', image: 'https://via.placeholder.com/64/ea4335/ffffff?text=BS', seat: null },
+            { id: '1RV21CS003', name: 'CHARLIE BROWN', image: 'https://via.placeholder.com/64/fbbc04/ffffff?text=CB', seat: null },
+            { id: '1RV21CS004', name: 'DAVID WILSON', image: 'https://via.placeholder.com/64/34a853/ffffff?text=DW', seat: null },
+            { id: '1RV21CS005', name: 'EVE DAVIS', image: 'https://via.placeholder.com/64/9c27b0/ffffff?text=ED', seat: null },
+            { id: '1RV21CS006', name: 'FRANK MILLER', image: 'https://via.placeholder.com/64/ff9800/ffffff?text=FM', seat: null },
+            { id: '1RV21CS007', name: 'GRACE GARCIA', image: 'https://via.placeholder.com/64/f44336/ffffff?text=GG', seat: null },
+            { id: '1RV21CS008', name: 'HENRY MARTINEZ', image: 'https://via.placeholder.com/64/2196f3/ffffff?text=HM', seat: null },
+            { id: '1RV21CS009', name: 'IVY RODRIGUEZ', image: 'https://via.placeholder.com/64/4caf50/ffffff?text=IR', seat: null },
+            { id: '1RV21CS010', name: 'JACK HERNANDEZ', image: 'https://via.placeholder.com/64/e91e63/ffffff?text=JH', seat: null },
+            { id: '1RV21CS011', name: 'KATE LOPEZ', image: 'https://via.placeholder.com/64/795548/ffffff?text=KL', seat: null },
+            { id: '1RV21CS012', name: 'LIAM GONZALEZ', image: 'https://via.placeholder.com/64/607d8b/ffffff?text=LG', seat: null },
+            { id: '1RV21CS013', name: 'MAYA PEREZ', image: 'https://via.placeholder.com/64/3f51b5/ffffff?text=MP', seat: null },
+            { id: '1RV21CS014', name: 'NOAH SANCHEZ', image: 'https://via.placeholder.com/64/009688/ffffff?text=NS', seat: null },
+            { id: '1RV21CS015', name: 'OLIVIA RAMIREZ', image: 'https://via.placeholder.com/64/ff5722/ffffff?text=OR', seat: null },
+            { id: '1RV21CS016', name: 'PETER TORRES', image: 'https://via.placeholder.com/64/8bc34a/ffffff?text=PT', seat: null },
+            { id: '1RV21CS017', name: 'QUINN RIVERA', image: 'https://via.placeholder.com/64/ffc107/ffffff?text=QR', seat: null },
+            { id: '1RV21CS018', name: 'RUBY COOPER', image: 'https://via.placeholder.com/64/e91e63/ffffff?text=RC', seat: null },
+            { id: '1RV21CS019', name: 'SAM BAILEY', image: 'https://via.placeholder.com/64/673ab7/ffffff?text=SB', seat: null },
+            { id: '1RV21CS020', name: 'TINA REED', image: 'https://via.placeholder.com/64/ff9800/ffffff?text=TR', seat: null },
+            { id: '1RV21CS021', name: 'URSA KELLY', image: 'https://via.placeholder.com/64/795548/ffffff?text=UK', seat: null },
+            { id: '1RV21CS022', name: 'VICTOR HOWARD', image: 'https://via.placeholder.com/64/607d8b/ffffff?text=VH', seat: null },
+            { id: '1RV21CS023', name: 'WENDY WARD', image: 'https://via.placeholder.com/64/4285f4/ffffff?text=WW', seat: null },
+            { id: '1RV21CS024', name: 'XAVIER COX', image: 'https://via.placeholder.com/64/ea4335/ffffff?text=XC', seat: null },
+            { id: '1RV21CS025', name: 'YARA DIAZ', image: 'https://via.placeholder.com/64/fbbc04/ffffff?text=YD', seat: null },
+            { id: '1RV21CS026', name: 'ZACK RICHARDSON', image: 'https://via.placeholder.com/64/34a853/ffffff?text=ZR', seat: null },
+            { id: '1RV21CS027', name: 'ANNA WOOD', image: 'https://via.placeholder.com/64/9c27b0/ffffff?text=AW', seat: null },
+            { id: '1RV21CS028', name: 'BEN WATSON', image: 'https://via.placeholder.com/64/ff9800/ffffff?text=BW', seat: null },
+            { id: '1RV21CS029', name: 'CORA BROOKS', image: 'https://via.placeholder.com/64/f44336/ffffff?text=CB', seat: null },
+            { id: '1RV21CS030', name: 'DAN KELLY', image: 'https://via.placeholder.com/64/2196f3/ffffff?text=DK', seat: null },
+            { id: '1RV21CS031', name: 'ELA GRAY', image: 'https://via.placeholder.com/64/4caf50/ffffff?text=EG', seat: null }
+        ];
+
+        // Global variables
+        let qrCodeInstance = null;
+        let timerInterval = null;
+        let qrTimeLeft = QR_REFRESH_INTERVAL;
+        let minuteTimeLeft = 60;
+        let attendanceData = new Set();
+        let takenSeats = new Set();
+        let isTimerRunning = false;
+        let seatStudentMap = new Map(); // Maps seat number to student ID
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQRCode();
+            initializeSeating();
+            initializeStudentList();
+            updateTimerDisplay();
+            updateMinuteTimerDisplay();
+            // Set total count
+            document.getElementById('totalCount').textContent = students.length;
+        });
+
+        // Timer Control Functions
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('timerStatus').textContent = 'Running';
+                document.getElementById('statusDot').classList.remove('paused');
+
+                timerInterval = setInterval(() => {
+                    qrTimeLeft--;
+                    minuteTimeLeft--;
+                    updateTimerDisplay();
+                    updateMinuteTimerDisplay();
+
+                    if (qrTimeLeft <= 0) {
+                        qrTimeLeft = QR_REFRESH_INTERVAL;
+                        generateQRCode();
+                    }
+                    if (minuteTimeLeft <= 0) {
+                        minuteTimeLeft = 60;
+                    }
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (isTimerRunning) {
+                isTimerRunning = false;
+                clearInterval(timerInterval);
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('timerStatus').textContent = 'Paused';
+                document.getElementById('statusDot').classList.add('paused');
+            }
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timerDisplay').textContent = `${qrTimeLeft} seconds`;
+        }
+
+        function updateMinuteTimerDisplay() {
+            document.getElementById('remainingTime').textContent = `${minuteTimeLeft} seconds`;
+        }
+
+        // QR Code Functions
+        function initializeQRCode() {
+            generateQRCode();
+        }
+
+        function generateQRCode() {
+            const qrData = {
+                class: 'CSE-D',
+                subject: 'DBMS',
+                room: '406',
+                timestamp: Date.now(),
+                session: Math.random().toString(36).substr(2, 9)
+            };
+
+            const qrString = `attendance:${JSON.stringify(qrData)}`;
+
+            // Remove previous QR code nodes to avoid stacking
+            const qrContainer = document.getElementById("qrCodeContainer");
+            qrContainer.innerHTML = "";
+
+            // Dynamically set QR size based on container
+            let size = Math.min(qrContainer.offsetWidth, qrContainer.offsetHeight);
+            if (!size || size < 100) size = 400; // fallback
+
+            qrCodeInstance = new QRCode(qrContainer, {
+                text: qrString,
+                width: size * 0.9,
+                height: size * 0.9,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        // Seating Functions
+        function initializeSeating() {
+            const seatGrid = document.getElementById('seatGrid');
+            seatGrid.innerHTML = '';
+
+            for (let i = 1; i <= TOTAL_SEATS; i++) {
+                const seat = document.createElement('div');
+                seat.className = 'seat';
+                seat.textContent = `S${i}`;
+                seat.dataset.seatNumber = i;
+                seat.addEventListener('click', () => toggleSeat(i));
+                seatGrid.appendChild(seat);
+            }
+        }
+
+        function toggleSeat(seatNumber) {
+            const seat = document.querySelector(`[data-seat-number="${seatNumber}"]`);
+            
+            if (takenSeats.has(seatNumber)) {
+                // Remove seat
+                takenSeats.delete(seatNumber);
+                seat.classList.remove('taken', 'conflict');
+                
+                // Remove seat assignment from student
+                const studentId = seatStudentMap.get(seatNumber);
+                if (studentId) {
+                    removeSeatFromStudent(studentId);
+                    seatStudentMap.delete(seatNumber);
+                }
+            } else {
+                // Add seat
+                takenSeats.add(seatNumber);
+                seat.classList.add('taken');
+                seat.classList.remove('conflict');
+                
+                // Auto-assign to a random student who doesn't have a seat (for demo)
+                const availableStudents = students.filter(s => s.seat === null);
+                if (availableStudents.length > 0) {
+                    const randomStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+                    assignSeatToStudent(randomStudent.id, seatNumber);
+                    seatStudentMap.set(seatNumber, randomStudent.id);
+                }
+            }
+            updateSeatConflicts();
+        }
+
+        function updateSeatConflicts() {
+            const conflictMode = document.getElementById('conflictSwitch').checked;
+            const seats = document.querySelectorAll('.seat');
+            
+            if (!conflictMode) {
+                seats.forEach(seat => seat.classList.remove('conflict'));
+                return;
+            }
+
+            seats.forEach(seat => {
+                if (takenSeats.has(Number(seat.dataset.seatNumber))) {
+                    seat.classList.add('taken');
+                    seat.classList.remove('conflict');
+                } else {
+                    seat.classList.remove('taken', 'conflict');
+                }
+            });
+
+            const excessSeats = takenSeats.size - attendanceData.size;
+            if (excessSeats > 0) {
+                let conflictCount = 0;
+                takenSeats.forEach(seatNumber => {
+                    const seat = document.querySelector(`[data-seat-number="${seatNumber}"]`);
+                    if (conflictCount < excessSeats) {
+                        seat.classList.remove('taken');
+                        seat.classList.add('conflict');
+                        conflictCount++;
+                    }
+                });
+            }
+        }
+
+        // Enhanced Student List Functions
+        function initializeStudentList() {
+            const container = document.getElementById('studentListContainer');
+            container.innerHTML = '';
+
+            students.forEach((student, index) => {
+                const row = document.createElement('div');
+                row.className = 'student-row';
+                row.dataset.studentId = student.id;
+
+                row.innerHTML = `
+                    <div class="serial-number">${(index + 1).toString().padStart(2, '0')}</div>
+                    <img class="student-thumbnail" 
+                         src="${student.image}" 
+                         alt="${student.name}"
+                         onerror="this.src='https://via.placeholder.com/64/6c757d/ffffff?text=${student.id}'">
+                    <div class="student-info">
+                        <div class="student-id"><span style='font-weight:600;color:#007bff;'>USN:</span> ${student.id}</div>
+                        <div class="student-name">${student.name}</div>
+                    </div>
+                    <div class="seat-number" id="seat-${student.id}">--</div>
+                    <div class="status-indicator" id="status-${student.id}"></div>
+                `;
+
+                row.addEventListener('click', () => toggleStudentAttendance(student.id));
+                container.appendChild(row);
+            });
+        }
+
+        function toggleStudentAttendance(studentId) {
+            const row = document.querySelector(`[data-student-id="${studentId}"]`);
+            const statusIndicator = document.getElementById(`status-${studentId}`);
+
+            if (attendanceData.has(studentId)) {
+                // Mark as absent
+                attendanceData.delete(studentId);
+                row.classList.remove('present');
+                statusIndicator.classList.remove('present');
+            } else {
+                // Mark as present
+                attendanceData.add(studentId);
+                row.classList.add('present');
+                statusIndicator.classList.add('present');
+            }
+
+            updateLiveCount();
+            updateSeatConflicts();
+        }
+
+        // Function to assign seat to student
+        function assignSeatToStudent(studentId, seatNumber) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                student.seat = seatNumber;
+                const seatDisplay = document.getElementById(`seat-${studentId}`);
+                if (seatDisplay) {
+                    seatDisplay.textContent = `S${seatNumber}`;
+                    seatDisplay.classList.add('assigned');
+                }
+            }
+        }
+
+        // Function to remove seat assignment
+        function removeSeatFromStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                student.seat = null;
+                const seatDisplay = document.getElementById(`seat-${studentId}`);
+                if (seatDisplay) {
+                    seatDisplay.textContent = '--';
+                    seatDisplay.classList.remove('assigned');
+                }
+            }
+        }
+
+        function updateLiveCount() {
+            document.getElementById('presentCount').textContent = attendanceData.size;
+        }
+
+        // Conflict Switch Handler
+        document.getElementById('conflictSwitch').addEventListener('change', function() {
+            updateSeatConflicts();
+        });
+
+        // Simulate random student check-ins for demo
+        function simulateCheckIn() {
+            if (attendanceData.size >= students.length) return;
+            
+            const availableStudents = students.filter(s => !attendanceData.has(s.id));
+            if (availableStudents.length > 0) {
+                const randomStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+                toggleStudentAttendance(randomStudent.id);
+            }
+        }
+
+        // Auto-simulate check-ins for demo (remove in production)
+        setInterval(simulateCheckIn, 8000);
+    </script>
+</body>
+</html>

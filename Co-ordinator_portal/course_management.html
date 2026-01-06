@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: Domain Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles for the new Edit/Delete buttons */
+        .course-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .course-actions button {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .course-actions .edit-btn {
+            color: #3498db;
+        }
+        .course-actions .edit-btn:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .course-actions .delete-btn {
+            color: #e74c3c;
+        }
+        .course-actions .delete-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Coordinator Portal</div>
+        <ul class="nav-menu">
+            <li><a href="announcements.html" class="nav-item">Announcements</a></li>
+            <li><a href="user_management.html" class="nav-item">User Management</a></li>
+            <li><a href="classroom_management.html" class="nav-item">Classroom Management</a></li>
+            <li><a href="course_management.html" class="nav-item active">Domain Management</a></li>
+            <li><a href="timetable.html" class="nav-item">Timetable</a></li>
+            <li><a href="cie_management.html" class="nav-item">CIE Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="course-management" class="content-section">
+            <h2 class="section-title">Domain Management</h2>
+            <div class="course-list-actions">
+                <input type="text" id="course-search" placeholder="Search domains..." style="width: 250px;">
+                <button id="add-domain-btn" class="submit-btn" style="width: auto; margin-left: 10px;">+ Add Domain</button>
+            </div>
+            <div class="course-list-container">
+                <ul id="course-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <div id="add-edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title-domain">Add New Domain</h3>
+            <form id="add-edit-form">
+                <input type="hidden" id="edit-domain-index">
+                <div class="form-group"><label for="domain-name">Domain Name</label><input type="text" id="domain-name" required></div>
+                <div class="form-group"><label for="domain-code">Domain Code</label><input type="text" id="domain-code" required></div>
+                <div class="form-group"><label for="domain-notes">Reference Notes</label><textarea id="domain-notes" rows="5" placeholder="Add text, links..."></textarea></div>
+                <div class="form-group"><label for="domain-videos">Video Links</label><textarea id="domain-videos" rows="3" placeholder="Paste links, one per line..."></textarea></div>
+                <button type="submit" class="submit-btn">Save Domain</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const domainModal = document.getElementById('add-edit-modal');
+        const addDomainBtn = document.getElementById('add-domain-btn');
+        const domainSearchInput = document.getElementById('course-search');
+        const domainListContainer = document.getElementById('course-list');
+        const domainForm = document.getElementById('add-edit-form');
+        const modalTitle = document.getElementById('modal-title-domain');
+        const editDomainIndexInput = document.getElementById('edit-domain-index');
+
+        // --- Modal Logic ---
+        const closeBtns = document.querySelectorAll('.close-btn');
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', () => btn.closest('.modal').classList.remove('active'));
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) e.target.classList.remove('active');
+        });
+
+        // --- Domain Management Logic ---
+        let allDomains = [
+            { code: 'CS101', name: 'Introduction to Programming', notes: 'Basics of C++.', videos: 'https://www.youtube.com/watch?v=1' },
+            { code: 'CS202', name: 'Data Structures and Algorithms', notes: 'Trees, graphs, and complexity.', videos: 'https://www.youtube.com/watch?v=2' }
+        ];
+
+        const renderDomains = (domains) => {
+            domainListContainer.innerHTML = '';
+            if (domains.length === 0) {
+                domainListContainer.innerHTML = '<p style="text-align: center; color: #7f8c8d;">No domains found.</p>';
+                return;
+            }
+            domains.forEach((domain, index) => {
+                const li = document.createElement('li');
+                li.classList.add('course-item');
+                li.innerHTML = `
+                    <div class="course-info">
+                        <h4>${domain.name}</h4>
+                        <p>Domain Code: ${domain.code}</p>
+                    </div>
+                    <div class="course-actions">
+                        <button class="edit-btn" data-index="${index}">Edit</button>
+                        <button class="delete-btn" data-index="${index}">Delete</button>
+                    </div>
+                `;
+                domainListContainer.appendChild(li);
+            });
+
+            // Add event listeners for the new buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', handleEdit);
+            });
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDelete);
+            });
+        };
+        
+        const openAddModal = () => {
+            domainForm.reset();
+            editDomainIndexInput.value = '';
+            modalTitle.textContent = 'Add New Domain';
+            domainModal.classList.add('active');
+        };
+
+        const handleEdit = (event) => {
+            const index = event.target.dataset.index;
+            const domain = allDomains[index];
+            
+            modalTitle.textContent = 'Edit Domain';
+            editDomainIndexInput.value = index;
+            document.getElementById('domain-name').value = domain.name;
+            document.getElementById('domain-code').value = domain.code;
+            document.getElementById('domain-notes').value = domain.notes;
+            document.getElementById('domain-videos').value = domain.videos;
+            
+            domainModal.classList.add('active');
+        };
+
+        const handleDelete = (event) => {
+            const index = event.target.dataset.index;
+            const domainName = allDomains[index].name;
+
+            if (confirm(`Are you sure you want to delete the domain "${domainName}"?`)) {
+                allDomains.splice(index, 1); // Remove the item from the array
+                renderDomains(allDomains);
+            }
+        };
+
+        domainSearchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredDomains = allDomains.filter(d => d.name.toLowerCase().includes(searchTerm) || d.code.toLowerCase().includes(searchTerm));
+            renderDomains(filteredDomains);
+        });
+
+        addDomainBtn.addEventListener('click', openAddModal);
+
+        domainForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const domainData = {
+                name: document.getElementById('domain-name').value,
+                code: document.getElementById('domain-code').value,
+                notes: document.getElementById('domain-notes').value,
+                videos: document.getElementById('domain-videos').value
+            };
+            const editIndex = editDomainIndexInput.value;
+
+            if (editIndex !== '') {
+                // Editing existing domain
+                allDomains[editIndex] = domainData;
+                alert('Domain updated successfully!');
+            } else {
+                // Adding new domain
+                allDomains.push(domainData);
+                alert('New domain added successfully!');
+            }
+            
+            renderDomains(allDomains);
+            domainForm.reset();
+            domainModal.classList.remove('active');
+        });
+
+        renderDomains(allDomains);
+    });
+    </script>
+</body>
+</html>

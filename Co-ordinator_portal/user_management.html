@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: User Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Coordinator Portal</div>
+        <ul class="nav-menu">
+            <li><a href="announcements.html" class="nav-item">Announcements</a></li>
+            <li><a href="user_management.html" class="nav-item active">User Management</a></li>
+            <li><a href="classroom_management.html" class="nav-item">Classroom Management</a></li>
+            <li><a href="course_management.html" class="nav-item">Course Management</a></li>
+            <li><a href="timetable.html" class="nav-item">Timetable</a></li>
+            <li><a href="cie_management.html" class="nav-item">CIE Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="user-management" class="content-section">
+            <h2 class="section-title">User Management</h2>
+            <div class="user-tabs">
+                <button class="tab-button active" data-user-type="students">Students</button>
+                <button class="tab-button" data-user-type="teachers">Teachers</button>
+                <button id="add-user-btn" class="submit-btn" style="margin-left: auto;">+ Add New User</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="user-table">
+                    <thead>
+                        </thead>
+                    <tbody id="user-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Add New User</h3>
+            <form id="add-user-form">
+                <div class="form-group" id="dept-field" style="display:none;">
+                    <label for="department">Department</label>
+                    <select id="department">
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group" id="courses-field" style="display:none;">
+                    <label for="teacher-courses">Courses Taught</label>
+                    <select id="teacher-courses" multiple size="5">
+                        <option value="CS101">CS101: Intro to Programming</option>
+                        <option value="CS202">CS202: Data Structures & Algorithms</option>
+                        <option value="IT301">IT301: Cybersecurity Fundamentals</option>
+                        <option value="ME201">ME201: Thermodynamics</option>
+                    </select>
+                    <small>Hold Ctrl (Windows) or Cmd (Mac) to select multiple courses.</small>
+                </div>
+                <div class="form-group" id="branch-field" style="display:none;">
+                    <label for="student-branch">Branch</label>
+                    <select id="student-branch">
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Civil">Civil</option>
+                    </select>
+                </div>
+                <div class="form-group" id="semester-field" style="display:none;">
+                    <label for="student-semester">Semester</label>
+                    <select id="student-semester">
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="id">ID / Roll No.</label>
+                    <input type="text" id="id" required>
+                </div>
+                <div class="form-group" id="biometric-field">
+                    <button type="button" class="submit-btn">Face capture</button>
+                </div>
+                <button type="submit" class="submit-btn" style="margin-top:20px;">Save User</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userModal = document.getElementById('add-user-modal');
+            const addUserBtn = document.getElementById('add-user-btn');
+            const addUserForm = document.getElementById('add-user-form');
+            const userTabs = document.querySelectorAll('.tab-button');
+            const userTableBody = document.getElementById('user-table-body');
+            const userTableHead = document.querySelector('#user-table thead');
+            const deptField = document.getElementById('dept-field');
+            const coursesField = document.getElementById('courses-field');
+            const semesterField = document.getElementById('semester-field');
+            const branchField = document.getElementById('branch-field');
+
+            // --- Modal Logic ---
+            const closeBtns = document.querySelectorAll('.close-btn');
+            addUserBtn.addEventListener('click', () => {
+                const userType = document.querySelector('.tab-button.active').dataset.userType;
+                document.getElementById('modal-title').textContent = `Add New ${userType.slice(0, -1)}`;
+                
+                // Show/hide fields based on user type
+                branchField.style.display = userType === 'students' ? 'block' : 'none';
+                semesterField.style.display = userType === 'students' ? 'block' : 'none';
+                document.getElementById('biometric-field').style.display = userType === 'students' ? 'block' : 'none';
+                deptField.style.display = userType === 'teachers' ? 'block' : 'none';
+                coursesField.style.display = userType === 'teachers' ? 'block' : 'none';
+                
+                userModal.classList.add('active');
+            });
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', () => btn.closest('.modal').classList.remove('active'));
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.classList.remove('active');
+                }
+            });
+
+            // --- User Management Logic ---
+            const userTables = {
+                students: `<tr><th>Roll No.</th><th>Name</th><th>Branch</th><th>Semester</th><th>Attendance</th></tr>`,
+                teachers: `<tr><th>Emp. ID</th><th>Name</th><th>Department</th><th>Courses</th></tr>`
+            };
+            const userData = {
+                students: [
+                    { id: '101', name: 'Alice Johnson', branch: 'Computer Science', semester: '3', attendance: '85%' },
+                    { id: '102', name: 'Bob Williams', branch: 'Information Technology', semester: '1', attendance: '92%' }
+                ],
+                teachers: [
+                    { id: 'T-01', name: 'Dr. Smith', dept: 'Computer Science', courses: ['CS101', 'CS202'] },
+                    { id: 'T-02', name: 'Prof. Sharma', dept: 'Mechanical', courses: ['ME201'] }
+                ]
+            };
+
+            const renderTable = (type) => {
+                userTableHead.innerHTML = userTables[type];
+                userTableBody.innerHTML = '';
+                userData[type].forEach(user => {
+                    const row = document.createElement('tr');
+                    if (type === 'students') {
+                        row.innerHTML = `<td>${user.id}</td><td>${user.name}</td><td>${user.branch}</td><td>${user.semester}</td><td>${user.attendance}</td>`;
+                    } else if (type === 'teachers') {
+                        row.innerHTML = `<td>${user.id}</td><td>${user.name}</td><td>${user.dept}</td><td>${user.courses.join(', ')}</td>`;
+                    }
+                    userTableBody.appendChild(row);
+                });
+            };
+
+            userTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    userTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderTable(tab.dataset.userType);
+                });
+            });
+            
+            addUserForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userType = document.querySelector('.tab-button.active').dataset.userType;
+                const name = document.getElementById('name').value;
+                const id = document.getElementById('id').value;
+
+                if (userType === 'students') {
+                    const branch = document.getElementById('student-branch').value;
+                    const semester = document.getElementById('student-semester').value;
+                    userData.students.push({
+                        id: id, name: name, branch: branch, semester: semester, attendance: 'N/A'
+                    });
+                    renderTable('students');
+                } else if (userType === 'teachers') {
+                    const department = document.getElementById('department').value;
+                    const selectedCourses = Array.from(document.getElementById('teacher-courses').selectedOptions).map(option => option.value);
+                    userData.teachers.push({
+                        id: id, name: name, dept: department, courses: selectedCourses
+                    });
+                    renderTable('teachers');
+                }
+                
+                addUserForm.reset();
+                userModal.classList.remove('active');
+                alert('User added successfully!');
+            });
+
+            renderTable('students');
+        });
+    </script>
+</body>
+</html>

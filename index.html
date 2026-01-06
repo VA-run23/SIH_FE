@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampSort - Login Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            width: 100%;
+            text-align: center;
+            padding: 32px 0 0 0;
+            letter-spacing: 2px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2d98da;
+            flex-shrink: 0;
+        }
+        
+        .container {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 120px);
+            position: relative;
+        }
+        
+        .left, .right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .left {
+            background: #fff;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+        }
+        
+        .right {
+            background: #2d98da;
+            color: #fff;
+        }
+        
+        .login-form {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .login-form h2 {
+            margin-bottom: 10px;
+            color: #2d98da;
+            text-align: center;
+        }
+        
+        .login-form input {
+            padding: 12px 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #2d98da;
+            box-shadow: 0 0 0 2px rgba(45, 152, 218, 0.1);
+        }
+        
+        .login-form button {
+            padding: 12px;
+            background: #2d98da;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .login-form button:hover {
+            background: #2274a5;
+        }
+        
+        .role-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 350px;
+            align-items: center;
+        }
+        
+        .role-options h2 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .role-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: #fff;
+            color: #2d98da;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            min-height: 48px;
+            line-height: 1.2;
+        }
+        
+        .role-btn:hover {
+            background: #2274a5;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .footer {
+            width: 100%;
+            text-align: center;
+            padding: 24px 0 12px 0;
+            font-size: 1.1rem;
+            color: #888;
+            letter-spacing: 1px;
+            background: #f5f6fa;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .left, .right {
+                min-height: 50vh;
+                padding: 30px 20px;
+            }
+            
+            .header {
+                font-size: 1.8rem;
+                padding: 20px 0 0 0;
+            }
+            
+            .login-form, .role-options {
+                max-width: 280px;
+            }
+            
+            .role-btn {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .left, .right {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                font-size: 1.5rem;
+            }
+            
+            .login-form, .role-options {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        CampSort
+    </div>
+    
+    <div class="container">
+        <div class="left">
+            <form class="login-form">
+                <h2>Student Login</h2>
+                <input type="text" placeholder="Student ID or Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        
+        <div class="right">
+            <div class="role-options">
+                <h2>Login as</h2>
+                <a class="role-btn" href="./Co-ordinator_portal/index.html">Co-ordinator</a>
+                <a class="role-btn" href="./Principal_portal/index.html">Principal</a>
+                <a class="role-btn" href="./Teacher_portal/login.html">Teacher</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Powered by CodingBees
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            alert("You will get the login credentials as you enter the corresponding portals.");
+        });
+
+    </script>
+</body>
+</html>

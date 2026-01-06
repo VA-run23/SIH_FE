@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+        <h1 class="login-title">Coordinator Login</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="coordinator-name">Name</label>
+                <input type="text" id="coordinator-name" placeholder="Enter your name" >
+            </div>
+            <div class="form-group">
+                <label for="coordinator-id">Coordinator ID</label>
+                <input type="password" id="coordinator-id" placeholder="Enter your ID" >
+            </div>
+
+            <div id="webcam-container" style="display: none;">
+                <video id="webcam" autoplay playsinline></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+                <button type="button" id="capture-btn" class="submit-btn">Capture</button>
+            </div>
+            
+            <button type="button" id="start-capture-btn" class="submit-btn secondary">Start Face Capture</button>
+            
+            <p id="capture-status" class="status-message"></p>
+            
+            <button type="submit" class="submit-btn" style="margin-top: 15px;">Login</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+    </div>
+
+    <script src="login.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            alert("For Co-ordinator Portal - Username: admin | Password: admin123");
+        });
+
+    </script>
+</body>
+</html>

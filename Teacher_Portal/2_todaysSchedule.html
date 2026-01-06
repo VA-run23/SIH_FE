@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Platform - Today's Schedule</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .header-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-pills .nav-link {
+            background-color: rgba(255,255,255,0.1);
+            color: #000;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: white;
+            color: #667eea;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: #1ae3df;
+        }
+
+        .college-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            margin-top: 20px;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .schedule-content {
+            padding: 0;
+        }
+
+        .schedule-table {
+            margin: 0;
+        }
+
+        .schedule-table th {
+            background: #f8f9fa;
+            border: none;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .schedule-table td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+        .schedule-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .attendance-btn {
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-take {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-take:hover {
+            background: #218838;
+            color: white;
+        }
+
+        /* Enhanced Status Button Group */
+        .status-button-group {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .status-btn {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            font-weight: 600;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .status-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Status Button States */
+        .status-btn.conducted {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .status-btn.conducted.active {
+            background: #28a745;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3);
+        }
+
+        .status-btn.altered {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
+
+        .status-btn.altered.active {
+            background: #ffc107;
+            color: #212529;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+        }
+
+        .status-btn.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        .status-btn.cancelled.active {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+        }
+
+        .status-btn.pending {
+            background: #e2e3e5;
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .status-btn.pending.active {
+            background: #6c757d;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Enhanced Daily Summary Styles */
+        .summary-section {
+            padding: 20px;
+        }
+
+        .summary-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            pointer-events: none;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.25);
+        }
+
+        .summary-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .summary-card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .summary-main-stat {
+            font-size: 3em;
+            font-weight: 800;
+            line-height: 1;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .summary-card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 8px;
+        }
+
+        .summary-card-subtitle {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 0;
+        }
+
+        .summary-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .detail-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .detail-value {
+            font-size: 1.2em;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .detail-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .progress-bar-custom {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        /* Alternative summary styles */
+        .summary-card.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .summary-card.tertiary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .summary-card.quaternary {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-pills {
+                flex-wrap: wrap;
+            }
+
+            .nav-pills .nav-link {
+                margin: 2px;
+                font-size: 0.9em;
+            }
+
+            .schedule-table {
+                font-size: 0.85em;
+            }
+
+            .summary-main-stat {
+                font-size: 2.5em;
+            }
+
+            .summary-cards-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .summary-card {
+                padding: 20px;
+            }
+
+            .status-button-group {
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .status-btn {
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <header class="header-nav">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+<div style="text-align: center;">
+  <a href="1_homepage_90_Done.html" style="text-decoration: none; color: inherit; font-size: 2em; font-weight: bold;">College Name</a>
+</div>
+
+
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid main-content">
+        <!-- Navigation Pills -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./2_todaysSchedule.html"><i class="fas fa-calendar-day me-2"></i>Today's Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./3_weeklyTimetable.html"><i class="fas fa-table me-2"></i>Complete Time Table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./4_myClasses_Done.html"><i class="fas fa-book me-2"></i>My Classes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Today's Schedule Section -->
+        <div class="content-section">
+            <h5 class="section-header">
+                <i class="fas fa-calendar-alt me-2"></i>Today's Schedule - Friday, September 19, 2025
+            </h5>
+            <div class="schedule-content">
+                <table class="table table-hover schedule-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Time</th>
+                            <th style="width: 20%;">Class Details</th>
+                            <th style="width: 15%;">Subject</th>
+                            <th style="width: 15%;">Lecture Hall</th>
+                            <th style="width: 15%;">Attendance</th>
+                            <th style="width: 20%;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-class-id="1">
+                            <td>
+                                <div class="fw-bold">09:00</div>
+                                <div class="text-muted small">10:00</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">CSE-A</div>
+                                <div class="text-muted small">Computer Science</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">CN-5</div>
+                                <div class="text-muted small">Computer Networks</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">405</div>
+                                <div class="text-muted small">Main Block</div>
+                            </td>
+                            <td>
+                                <button class="attendance-btn btn-take" onclick="window.location.href='./5_takingAtttendance_90_Done.html'">
+                                    <i class="fas fa-check me-1" ></i>Take Attendance
+                                </button>
+                            </td>
+                            <td>
+                                <div class="status-button-group">
+                                    <button class="status-btn conducted active" onclick="setStatus(this, 'conducted')">
+                                        <i class="fas fa-check me-1"></i>Conducted
+                                    </button>
+                                    <button class="status-btn altered" onclick="setStatus(this, 'altered')">
+                                        <i class="fas fa-edit me-1"></i>Altered
+                                    </button>
+                                    <button class="status-btn cancelled" onclick="setStatus(this, 'cancelled')">
+                                        <i class="fas fa-times me-1"></i>Cancelled
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-class-id="2">
+                            <td>
+                                <div class="fw-bold">11:30</div>
+                                <div class="text-muted small">12:30</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">AI ML- B</div>
+                                <div class="text-muted small">Artificial Intelligence and Machine Learning</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">AI-3</div>
+                                <div class="text-muted small">Artificial Intelligence</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">403</div>
+                                <div class="text-muted small">Main Block</div>
+                            </td>
+                            <td>
+                                <button class="attendance-btn btn-take" onclick="window.location.href='./5_takingAtttendance_90_Done.html'">
+                                    <i class="fas fa-check me-1" ></i>Take Attendance
+                                </button>
+                            </td>
+                            <td>
+                                <div class="status-button-group">
+                                    <button class="status-btn conducted active" onclick="setStatus(this, 'conducted')">
+                                        <i class="fas fa-check me-1"></i>Conducted
+                                    </button>
+                                    <button class="status-btn altered" onclick="setStatus(this, 'altered')">
+                                        <i class="fas fa-edit me-1"></i>Altered
+                                    </button>
+                                    <button class="status-btn cancelled" onclick="setStatus(this, 'cancelled')">
+                                        <i class="fas fa-times me-1"></i>Cancelled
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-class-id="3">
+                            <td>
+                                <div class="fw-bold">14:00</div>
+                                <div class="text-muted small">15:00</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">DS - A</div>
+                                <div class="text-muted small">Data Science</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">DS-7</div>
+                                <div class="text-muted small">Data Science</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">401</div>
+                                <div class="text-muted small">Main Block</div>
+                            </td>
+                            <td>
+                                <button class="attendance-btn btn-take" >
+                                    <i class="fas fa-clock me-1"></i>Upcoming
+                                </button>
+                            </td>
+                            <td>
+                                <div class="status-button-group">
+                                    <button class="status-btn pending active" onclick="setStatus(this, 'pending')">
+                                        <i class="fas fa-clock me-1"></i>Pending
+                                    </button>
+                                    <button class="status-btn altered" onclick="setStatus(this, 'altered')">
+                                        <i class="fas fa-edit me-1"></i>Altered
+                                    </button>
+                                    <button class="status-btn cancelled" onclick="setStatus(this, 'cancelled')">
+                                        <i class="fas fa-times me-1"></i>Cancelled
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-class-id="4">
+                            <td>
+                                <div class="fw-bold">15:30</div>
+                                <div class="text-muted small">16:30</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">CY-A</div>
+                                <div class="text-muted small">Cyber Science</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">OS-6</div>
+                                <div class="text-muted small">Operating Systems</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">402</div>
+                                <div class="text-muted small">Main Block</div>
+                            </td>
+                            <td>
+                                <button class="attendance-btn btn-take">
+                                    <i class="fas fa-clock me-1"></i>Upcoming
+                                </button>
+                            </td>
+                            <td>
+                                <div class="status-button-group">
+                                    <button class="status-btn pending active" onclick="setStatus(this, 'pending')">
+                                        <i class="fas fa-clock me-1"></i>Pending
+                                    </button>
+                                    <button class="status-btn altered" onclick="setStatus(this, 'altered')">
+                                        <i class="fas fa-edit me-1"></i>Altered
+                                    </button>
+                                    <button class="status-btn cancelled" onclick="setStatus(this, 'cancelled')">
+                                        <i class="fas fa-times me-1"></i>Cancelled
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Daily Summary Section -->
+        <div class="content-section">
+            <h5 class="section-header">
+                <i class="fas fa-chart-bar me-2"></i>Daily Summary & Statistics
+            </h5>
+            <div class="summary-section">
+                <div class="summary-cards-container">
+                    <!-- Total Teaching Hours Card -->
+                    <div class="summary-card">
+                        <div class="summary-card-header">
+                            <div>
+                                <div class="summary-card-title">Total Teaching Hours</div>
+                                <div class="summary-card-subtitle">Today's Workload</div>
+                            </div>
+                            <div class="summary-card-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-main-stat" id="totalHours">4</div>
+                        
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" id="hoursProgress" style="width: 50%;"></div>
+                        </div>
+                        
+                        <div class="summary-details">
+                            <div class="detail-item">
+                                <div class="detail-value" id="completedHours">2</div>
+                                <div class="detail-label">Completed</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value" id="remainingHours">2</div>
+                                <div class="detail-label">Remaining</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value" id="totalClasses">4</div>
+                                <div class="detail-label">Classes</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Class status data
+        let classStatusData = {
+            conducted: 2,
+            altered: 0,
+            cancelled: 0,
+            pending: 2
+        };
+
+        // Set status function for 3-button selection
+        function setStatus(button, status) {
+            const statusGroup = button.parentElement;
+            const row = button.closest('tr');
+            
+            // Remove active class from all buttons in this group
+            statusGroup.querySelectorAll('.status-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Update the class data
+            const classId = row.dataset.classId;
+            console.log(`Class ${classId} status changed to: ${status}`);
+            
+            // Update global statistics
+            updateClassStatusData();
+            updateSummaryStats();
+            
+            // Show feedback
+            showStatusToast(status, `Class status updated to ${status.charAt(0).toUpperCase() + status.slice(1)}`);
+        }
+
+        // Take attendance function
+        function takeAttendance(button) {
+            const currentText = button.textContent.trim();
+            
+            if (currentText.includes('Take Attendance') || currentText.includes('Upcoming')) {
+                button.innerHTML = '<i class="fas fa-check me-1"></i>Attendance Taken';
+                button.style.background = '#28a745';
+                button.disabled = true;
+                
+                // Update status to conducted automatically
+                const row = button.closest('tr');
+                const conductedBtn = row.querySelector('.status-btn.conducted');
+                if (conductedBtn && !conductedBtn.classList.contains('active')) {
+                    setStatus(conductedBtn, 'conducted');
+                }
+                
+                showStatusToast('success', 'Attendance taken successfully!');
+            }
+        }
+
+        // Update class status data from DOM
+        function updateClassStatusData() {
+            const statuses = { conducted: 0, altered: 0, cancelled: 0, pending: 0 };
+            
+            document.querySelectorAll('.status-button-group').forEach(group => {
+                const activeBtn = group.querySelector('.status-btn.active');
+                if (activeBtn) {
+                    if (activeBtn.classList.contains('conducted')) statuses.conducted++;
+                    else if (activeBtn.classList.contains('altered')) statuses.altered++;
+                    else if (activeBtn.classList.contains('cancelled')) statuses.cancelled++;
+                    else if (activeBtn.classList.contains('pending')) statuses.pending++;
+                }
+            });
+            
+            classStatusData = statuses;
+        }
+
+        // Update summary statistics
+        function updateSummaryStats() {
+            const totalClasses = 4;
+            const completedClasses = classStatusData.conducted + classStatusData.altered;
+            const remainingClasses = totalClasses - completedClasses;
+            const completionPercentage = (completedClasses / totalClasses) * 100;
+            
+            // Update total hours section
+            document.getElementById('totalHours').textContent = totalClasses;
+            document.getElementById('completedHours').textContent = completedClasses;
+            document.getElementById('remainingHours').textContent = remainingClasses;
+            document.getElementById('totalClasses').textContent = totalClasses;
+            document.getElementById('hoursProgress').style.width = completionPercentage + '%';
+            
+            // Update class status section
+            document.getElementById('completionRate').textContent = Math.round(completionPercentage) + '%';
+            document.getElementById('conductedCount').textContent = classStatusData.conducted;
+            document.getElementById('alteredCount').textContent = classStatusData.altered;
+            document.getElementById('cancelledCount').textContent = classStatusData.cancelled;
+            
+            // Update attendance section
+            const attendanceTaken = document.querySelectorAll('.attendance-btn:disabled').length;
+            document.getElementById('attendanceCount').textContent = `${attendanceTaken}/${totalClasses}`;
+        }
+
+        // Show status toast notification
+        function showStatusToast(type, message) {
+            const toast = document.createElement('div');
+            toast.className = 'position-fixed top-0 end-0 p-3';
+            toast.style.zIndex = '9999';
+
+            const bgClass = type === 'success' ? 'bg-success' : 
+                           type === 'conducted' ? 'bg-success' :
+                           type === 'altered' ? 'bg-warning' :
+                           type === 'cancelled' ? 'bg-danger' : 'bg-info';
+
+            const iconClass = type === 'success' ? 'fa-check-circle' :
+                             type === 'conducted' ? 'fa-check-circle' :
+                             type === 'altered' ? 'fa-edit' :
+                             type === 'cancelled' ? 'fa-times-circle' : 'fa-info-circle';
+
+            toast.innerHTML = `
+                <div class="toast show" role="alert">
+                    <div class="toast-header ${bgClass} text-white">
+                        <i class="fas ${iconClass} me-2"></i>
+                        <strong class="me-auto">Status Update</strong>
+                        <button type="button" class="btn-close btn-close-white" onclick="this.closest('.toast').parentElement.remove()"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateClassStatusData();
+            updateSummaryStats();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.altKey) {
+                    switch(e.key) {
+                        case '1':
+                            // Alt+1 for conducted status on focused row
+                            e.preventDefault();
+                            break;
+                        case '2':
+                            // Alt+2 for altered status on focused row
+                            e.preventDefault();
+                            break;
+                        case '3':
+                            // Alt+3 for cancelled status on focused row
+                            e.preventDefault();
+                            break;
+                    }
+                }
+            });
+        });
+
+        // Auto-update time display
+        setInterval(function() {
+            const now = new Date();
+            console.log('Current time:', now.toLocaleTimeString());
+        }, 60000); // Update every minute
+    </script>
+</body>
+</html>

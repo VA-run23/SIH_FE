@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: Timetable</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .timetable-cell small { 
+            display: block; 
+            color: #7f8c8d; 
+            margin-top: 4px; 
+            font-size: 0.9em;
+        }
+        .timetable-cell[draggable="true"] {
+            cursor: grab;
+        }
+        .timetable-cell.dragging {
+            opacity: 0.4;
+        }
+        .timetable-cell.drag-over {
+            border: 2px dashed #3498db !important;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Coordinator Portal</div>
+        <ul class="nav-menu">
+            <li><a href="announcements.html" class="nav-item">Announcements</a></li>
+            <li><a href="user_management.html" class="nav-item">User Management</a></li>
+            <li><a href="classroom_management.html" class="nav-item">Classroom Management</a></li>
+            <li><a href="course_management.html" class="nav-item">Domain Management</a></li>
+            <li><a href="timetable.html" class="nav-item active">Timetable</a></li>
+            <li><a href="cie_management.html" class="nav-item">CIE Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="timetable-management" class="content-section">
+            <h2 class="section-title">Weekly Timetable</h2>
+            <div class="timetable-controls">
+                <div class="timetable-option-group">
+                    <div class="timetable-option"><input type="radio" id="class-radio" name="timetable-type" value="class" checked><label for="class-radio">Class</label></div>
+                    <div class="timetable-option"><input type="radio" id="teacher-radio" name="timetable-type" value="teacher"><label for="teacher-radio">Teacher</label></div>
+                </div>
+                <div id="class-controls" class="timetable-class-container">
+                    <div class="form-group" style="flex: 1;"><label for="dept-select">Department</label><select id="dept-select"><option value="CS">Computer Science</option><option value="IT">Information Technology</option></select></div>
+                    <div class="form-group" style="flex: 1;"><label for="semester-select">Semester</label><select id="semester-select"><option value="1">1</option><option value="2">2</option></select></div>
+                    <div class="form-group" style="flex: 1;"><label for="section-select">Section</label><select id="section-select"><option value="A">A</option><option value="B">B</option></select></div>
+                </div>
+                <div id="teacher-controls" class="timetable-search-container">
+                    <div class="form-group"><label for="teacher-search-input">Teacher Name</label><input type="text" id="teacher-search-input" placeholder="e.g., Dr. Smith"></div>
+                </div>
+                <button id="show-timetable-btn" class="submit-btn" style="width: auto; flex: 0.5; margin-bottom: 15px;">Show Timetable</button>
+            </div>
+            <div id="timetable-display" class="timetable-grid"></div>
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const deptSelect = document.getElementById('dept-select');
+        const semesterSelect = document.getElementById('semester-select');
+        const sectionSelect = document.getElementById('section-select');
+        const showTimetableBtn = document.getElementById('show-timetable-btn');
+        const timetableDisplay = document.getElementById('timetable-display');
+        const timetableTypeRadios = document.getElementsByName('timetable-type');
+        const classControls = document.getElementById('class-controls');
+        const teacherControls = document.getElementById('teacher-controls');
+        const teacherSearchInput = document.getElementById('teacher-search-input');
+        
+        const times = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM'];
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        const FREE_SLOT = { s: 'Free', t: 'Free', r: '' };
+
+        let masterTimetableData = {
+            'CS-1A': [
+                [{ s: 'Maths', t: 'Dr. Smith', r: 'A-101' }, { s: 'Physics', t: 'Dr. Smith', r: 'B-201' }, { s: 'Chemistry', t: 'Ms. Kaur', r: 'C-301' }, { s: 'Engg. Drawing', t: 'Prof. Chen', r: 'D-401' }, { s: 'Biology', t: 'Prof. Ray', r: 'LAB-1' }],
+                [{ s: 'Physics', t: 'Dr. Smith', r: 'B-201' }, { s: 'Chemistry', t: 'Ms. Kaur', r: 'C-301' }, { s: 'Maths', t: 'Dr. Smith', r: 'A-101' }, { s: 'Web Tech', t: 'Dr. John', r: 'LAB-2' }, { s: 'Data Structures', t: 'Dr. John', r: 'LAB-3' }],
+                [{ s: 'Chemistry', t: 'Ms. Kaur', r: 'C-301' }, { s: 'Electronics', t: 'Mr. Gupta', r: 'B-204' }, { s: 'Data Structures', t: 'Dr. John', r: 'LAB-3' }, { s: 'OS', t: 'Ms. Kaur', r: 'A-102' }, FREE_SLOT],
+                [{ s: 'Data Structures', t: 'Dr. John', r: 'LAB-3' }, { s: 'Probability', t: 'Prof. Lee', r: 'C-305' }, { s: 'Compiler', t: 'Prof. Davis', r: 'D-402' }, { s: 'Distributed Sys', t: 'Prof. Chen', r: 'A-105' }, { s: 'Networks', t: 'Prof. Davis', r: 'LAB-4' }],
+                [{ s: 'OS', t: 'Ms. Kaur', r: 'A-102' }, { s: 'ML', t: 'Prof. Lee', r: 'D-408' }, { s: 'Web Tech', t: 'Dr. John', r: 'LAB-2' }, FREE_SLOT, { s: 'Distributed Sys', t: 'Prof. Chen', r: 'A-105' }]
+            ],
+            'CS-1B': [
+                [{ s: 'Data Structures', t: 'Dr. John', r: 'LAB-3' }, { s: 'Web Tech', t: 'Dr. John', r: 'LAB-2' }, { s: 'Thermo', t: 'Mr. Gupta', r: 'B-205' }, { s: 'Maths', t: 'Dr. Smith', r: 'A-101' }, { s: 'Physics', t: 'Dr. Smith', r: 'B-201' }],
+                [{ s: 'Physics', t: 'Dr. Smith', r: 'B-201' }, { s: 'Chemistry', t: 'Ms. Kaur', r: 'C-301' }, { s: 'Data Structures', t: 'Dr. John', r: 'LAB-3' }, { s: 'OS', t: 'Ms. Kaur', r: 'A-102' }, FREE_SLOT],
+                [{ s: 'Maths', t: 'Dr. Smith', r: 'A-101' }, { s: 'Compiler', t: 'Prof. Davis', r: 'D-402' }, { s: 'Engg. Drawing', t: 'Prof. Chen', r: 'D-401' }, { s: 'Web Tech', t: 'Dr. John', r: 'LAB-2' }, FREE_SLOT],
+                [FREE_SLOT, { s: 'Thermo', t: 'Mr. Gupta', r: 'B-205' }, { s: 'Probability', t: 'Prof. Lee', r: 'C-305' }, FREE_SLOT, { s: 'Distributed Sys', t: 'Prof. Chen', r: 'A-105' }],
+                [{ s: 'OS', t: 'Ms. Kaur', r: 'A-102' }, { s: 'ML', t: 'Prof. Lee', r: 'D-408' }, { s: 'Web Tech', t: 'Dr. John', r: 'LAB-2' }, FREE_SLOT, { s: 'Networks', t: 'Prof. Davis', r: 'LAB-4' }]
+            ],
+        };
+        
+        const renderTimetable = () => {
+            const selectedType = document.querySelector('input[name="timetable-type"]:checked').value;
+            const selectedClassKey = `${deptSelect.value}-${semesterSelect.value}${sectionSelect.value}`;
+
+            let gridHtml = `<div class="timetable-cell header">Time</div>`;
+            days.forEach(day => gridHtml += `<div class="timetable-cell header">${day}</div>`);
+
+            if (selectedType === 'class') {
+                const schedule = masterTimetableData[selectedClassKey] || [];
+                if (schedule.length > 0) {
+                    times.forEach((time, timeIndex) => {
+                        gridHtml += `<div class="timetable-cell">${time}</div>`;
+                        days.forEach((day, dayIndex) => {
+                            const period = schedule[dayIndex][timeIndex];
+                            const isFree = period.s === 'Free';
+                            const cellClass = isFree ? 'free-slot' : '';
+                            const content = isFree ? 'Free' : `${period.s}<br><small>Room: ${period.r}</small>`;
+                            
+                            gridHtml += `<div class="timetable-cell ${cellClass}" 
+                                              draggable="${!isFree}"
+                                              data-day="${dayIndex}" 
+                                              data-time="${timeIndex}">
+                                              ${content}
+                                         </div>`;
+                        });
+                    });
+                } else {
+                    gridHtml += `<div class="timetable-cell" style="grid-column: span 6; text-align: center;">No timetable found.</div>`;
+                }
+            } else { // Teacher view logic
+                const teacherName = teacherSearchInput.value.trim();
+                let found = false;
+                const teacherSchedule = Array.from({ length: times.length }, () => Array(days.length).fill(null));
+                for (const sectionKey in masterTimetableData) {
+                    const schedule = masterTimetableData[sectionKey];
+                    for (let i = 0; i < days.length; i++) {
+                        for (let j = 0; j < times.length; j++) {
+                            if (schedule[i][j].t.toLowerCase() === teacherName.toLowerCase()) {
+                                teacherSchedule[j][i] = `${schedule[i][j].s} (${sectionKey})`;
+                                found = true;
+                            }
+                        }
+                    }
+                }
+                if (found) {
+                    times.forEach((time, i) => {
+                        gridHtml += `<div class="timetable-cell">${time}</div>`;
+                        days.forEach((day, j) => {
+                            const content = teacherSchedule[i][j] || 'Free';
+                            gridHtml += `<div class="timetable-cell ${content === 'Free' ? 'free-slot' : ''}">${content}</div>`;
+                        });
+                    });
+                } else {
+                    gridHtml += `<div class="timetable-cell" style="grid-column: span 6; text-align: center;">No timetable found for this teacher.</div>`;
+                }
+            }
+            timetableDisplay.innerHTML = gridHtml;
+            addDragDropListeners();
+        };
+
+        function addDragDropListeners() {
+            const cells = document.querySelectorAll('.timetable-cell[data-day]');
+
+            cells.forEach(cell => {
+                if (cell.getAttribute('draggable') === 'true') {
+                    cell.addEventListener('dragstart', e => {
+                        e.target.classList.add('dragging');
+                        const pos = `${e.target.dataset.day},${e.target.dataset.time}`;
+                        e.dataTransfer.setData('text/plain', pos);
+                    });
+                    cell.addEventListener('dragend', e => {
+                        e.target.classList.remove('dragging');
+                    });
+                }
+
+                if (cell.classList.contains('free-slot')) {
+                    cell.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        e.target.classList.add('drag-over');
+                    });
+                    cell.addEventListener('dragleave', e => {
+                        e.target.classList.remove('drag-over');
+                    });
+                    cell.addEventListener('drop', e => {
+                        e.preventDefault();
+                        e.target.classList.remove('drag-over');
+                        
+                        const pos = e.dataTransfer.getData('text/plain');
+                        if (!pos) return; // Exit if no data was transferred
+
+                        const [fromDay, fromTime] = pos.split(',');
+                        const toDay = e.target.dataset.day;
+                        const toTime = e.target.dataset.time;
+                        
+                        const classKey = `${deptSelect.value}-${semesterSelect.value}${sectionSelect.value}`;
+
+                        if (masterTimetableData[classKey] && fromDay && fromTime && toDay && toTime) {
+                            const classToMove = masterTimetableData[classKey][fromDay][fromTime];
+                            masterTimetableData[classKey][toDay][toTime] = classToMove;
+                            masterTimetableData[classKey][fromDay][fromTime] = { ...FREE_SLOT };
+                            renderTimetable();
+                        }
+                    });
+                }
+            });
+        }
+
+        showTimetableBtn.addEventListener('click', renderTimetable);
+        timetableTypeRadios.forEach(radio => {
+            radio.addEventListener('change', e => {
+                classControls.style.display = e.target.value === 'class' ? 'flex' : 'none';
+                teacherControls.style.display = e.target.value === 'teacher' ? 'flex' : 'none';
+                renderTimetable();
+            });
+        });
+        [deptSelect, semesterSelect, sectionSelect].forEach(el => el.addEventListener('change', renderTimetable));
+        
+        renderTimetable();
+    });
+    </script>
+</body>
+</html>
