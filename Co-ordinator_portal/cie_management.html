@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: CIE Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .action-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            color: #3498db;
+        }
+        .action-btn:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .weightage-validation-msg {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #e74c3c;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Coordinator Portal</div>
+        <ul class="nav-menu">
+            <li><a href="announcements.html" class="nav-item">Announcements</a></li>
+            <li><a href="user_management.html" class="nav-item">User Management</a></li>
+            <li><a href="classroom_management.html" class="nav-item">Classroom Management</a></li>
+            <li><a href="course_management.html" class="nav-item">Domain Management</a></li>
+            <li><a href="timetable.html" class="nav-item">Timetable</a></li>
+            <li><a href="cie_management.html" class="nav-item active">CIE Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="cie-management" class="content-section">
+            <h2 class="section-title">CIE Management</h2>
+            <div class="cie-management">
+                <div class="cie-form-container">
+                    <h3 id="form-title">Add New Component</h3>
+                    <form id="add-cie-form">
+                        <input type="hidden" id="edit-component-index">
+                        <div class="form-group"><label for="course-select">Select Course</label><select id="course-select"><option value="cs">Computer Science</option><option value="it">Information Technology</option></select></div>
+                        <div class="form-group"><label for="component-name">Component Name</label><input type="text" id="component-name" placeholder="e.g., Test 1" required></div>
+                        <div class="form-group"><label for="max-marks">Maximum Marks</label><input type="number" id="max-marks" min="1" required></div>
+                        <div class="form-group"><label for="weightage">Weightage (%)</label><input type="number" id="weightage" min="1" max="100" required></div>
+                        <button type="submit" id="submit-cie-btn" class="submit-btn">Add Component</button>
+                    </form>
+                </div>
+                <div class="cie-table-container">
+                    <h3 id="table-title"></h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Component</th><th>Max Marks</th><th>Weightage</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="cie-table-body"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" style="text-align: right; font-weight: bold;">Total CIE Marks</td>
+                                <td id="total-cie-marks" style="font-weight: bold;"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: right; font-weight: bold;">Total Weightage</td>
+                                <td id="total-weightage" style="font-weight: bold;"></td>
+                                <td><span id="weightage-validation-msg"></span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cieForm = document.getElementById('add-cie-form');
+        const cieCourseSelect = document.getElementById('course-select');
+        const cieTableBody = document.getElementById('cie-table-body');
+        const submitBtn = document.getElementById('submit-cie-btn');
+        const formTitle = document.getElementById('form-title');
+        const tableTitle = document.getElementById('table-title');
+        const editComponentIndexInput = document.getElementById('edit-component-index');
+
+        let cieData = {
+            'cs': [
+                { name: 'Test 1', maxMarks: 30, weightage: 50 },
+                { name: 'Assignment', maxMarks: 20, weightage: 30 },
+                { name: 'Quiz', maxMarks: 10, weightage: 20 }
+            ],
+            'it': [
+                { name: 'Mid-term Exam', maxMarks: 50, weightage: 60 },
+                { name: 'Project', maxMarks: 50, weightage: 40 }
+            ]
+        };
+
+        const updateUIForCourse = (courseCode) => {
+            const selectedOptionText = cieCourseSelect.options[cieCourseSelect.selectedIndex].text;
+            tableTitle.textContent = `CIE Components for ${selectedOptionText}`;
+            
+            const courseCieData = cieData[courseCode] || [];
+            const totalCieMarksEl = document.getElementById('total-cie-marks');
+            const totalWeightageEl = document.getElementById('total-weightage');
+            const validationMsgEl = document.getElementById('weightage-validation-msg');
+            
+            cieTableBody.innerHTML = '';
+            let totalMarks = 0;
+            let totalWeightage = 0;
+
+            if (courseCieData.length === 0) {
+                cieTableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No CIE components.</td></tr>`;
+            } else {
+                courseCieData.forEach((component, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${component.name}</td>
+                        <td>${component.maxMarks}</td>
+                        <td>${component.weightage}%</td>
+                        <td><button class="action-btn" data-index="${index}">Edit</button></td>
+                    `;
+                    cieTableBody.appendChild(row);
+                    totalMarks += parseFloat(component.maxMarks);
+                    totalWeightage += parseFloat(component.weightage);
+                });
+            }
+
+            totalCieMarksEl.textContent = totalMarks;
+            totalWeightageEl.textContent = `${totalWeightage}%`;
+
+            if (totalWeightage !== 100 && courseCieData.length > 0) {
+                totalWeightageEl.style.color = '#e74c3c';
+                validationMsgEl.textContent = "Total must be 100%";
+            } else {
+                totalWeightageEl.style.color = '';
+                validationMsgEl.textContent = "";
+            }
+
+            document.querySelectorAll('.action-btn').forEach(button => {
+                button.addEventListener('click', handleEditClick);
+            });
+        };
+
+        const handleEditClick = (event) => {
+            const index = event.target.dataset.index;
+            const courseCode = cieCourseSelect.value;
+            const component = cieData[courseCode][index];
+
+            formTitle.textContent = "Edit Component";
+            submitBtn.textContent = "Update Component";
+            editComponentIndexInput.value = index;
+
+            document.getElementById('component-name').value = component.name;
+            document.getElementById('max-marks').value = component.maxMarks;
+            document.getElementById('weightage').value = component.weightage;
+        };
+
+        const resetFormState = () => {
+            formTitle.textContent = "Add New Component";
+            submitBtn.textContent = "Add Component";
+            editComponentIndexInput.value = '';
+            // Manually clear inputs instead of form.reset() to preserve dropdown selection
+            document.getElementById('component-name').value = '';
+            document.getElementById('max-marks').value = '';
+            document.getElementById('weightage').value = '';
+        };
+
+        cieForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const courseCode = cieCourseSelect.value;
+            const editIndex = editComponentIndexInput.value;
+            const newWeightage = parseFloat(document.getElementById('weightage').value);
+
+            const components = cieData[courseCode] || [];
+            let currentTotalWeightage = 0;
+            components.forEach((comp, index) => {
+                if (editIndex === '' || parseInt(editIndex) !== index) {
+                    currentTotalWeightage += parseFloat(comp.weightage);
+                }
+            });
+
+            if (currentTotalWeightage + newWeightage > 100) {
+                alert(`Error: Adding ${newWeightage}% would make the total weightage ${currentTotalWeightage + newWeightage}%, which exceeds 100%.`);
+                return;
+            }
+            
+            const newComponent = {
+                name: document.getElementById('component-name').value,
+                maxMarks: document.getElementById('max-marks').value,
+                weightage: newWeightage
+            };
+
+            if (editIndex !== '') {
+                cieData[courseCode][editIndex] = newComponent;
+                alert('Component updated successfully!');
+            } else {
+                if (!cieData[courseCode]) cieData[courseCode] = [];
+                cieData[courseCode].push(newComponent);
+                alert('New CIE component added!');
+            }
+            
+            updateUIForCourse(courseCode);
+            resetFormState();
+        });
+        
+        cieCourseSelect.addEventListener('change', (e) => {
+            updateUIForCourse(e.target.value);
+            resetFormState();
+        });
+        
+        // Initial setup on page load
+        updateUIForCourse(cieCourseSelect.value);
+    });
+    </script>
+</body>
+</html>

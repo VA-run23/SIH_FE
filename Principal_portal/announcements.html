@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements - Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header"><h3>Principal Portal</h3></div>
+            <ul class="sidebar-menu">
+<li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+                <li class="active"><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Announcements</h2>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <span>Dr. Anjali Rao</span> <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header">
+                                <h5>Dr. Anjali Rao</h5> <p>Principal</p>
+                            </div>
+                            <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <h4>Create New Announcement</h4>
+                <form style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Select Audience:</label>
+                        <div class="audience-selector">
+                            <input type="radio" id="to-staff" name="audience" value="staff" checked>
+                            <label for="to-staff"><i class="fas fa-chalkboard-teacher"></i> Staff</label>
+                            <input type="radio" id="to-students" name="audience" value="students">
+                            <label for="to-students"><i class="fas fa-user-graduate"></i> Students</label>
+                            <input type="radio" id="to-everyone" name="audience" value="everyone">
+                            <label for="to-everyone"><i class="fas fa-globe"></i> Everyone</label>
+                        </div>
+                    </div>
+                    <div id="department-select" class="department-select-wrapper visible">
+                        <div class="form-group">
+                            <label for="department">Refine by Department (Optional):</label>
+                            <select id="department">
+                                <option>All Departments</option>
+                                <option>Computer Science</option>
+                                <option>Electronics</option>
+                                <option>Mechanical</option>
+                                <option>Civil</option>
+                                <option>Information Science</option>
+                                <option>AI & Machine Learning</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" placeholder="Type your announcement here..." rows="5"></textarea>
+                    </div>
+                    <button type="button" class="btn"><i class="fas fa-paper-plane"></i> Send Announcement</button>
+                </form>
+            </div>
+
+            <div class="past-announcements-list">
+                <h4 style="margin-bottom: 15px;">Sent Announcements</h4>
+                <div class="announcement-item"><div class="announcement-header"><span class="recipient"><i class="fas fa-users"></i> To: All Staff</span><span class="date">14-Sep-2025</span></div><p class="announcement-body">This is a reminder that the monthly staff meeting will be held tomorrow at 3:00 PM in the main conference hall. All staff members are required to attend.</p></div>
+                <div class="announcement-item"><div class="announcement-header"><span class="recipient"><i class="fas fa-laptop-code"></i> To: Computer Science Department</span><span class="date">12-Sep-2025</span></div><p class="announcement-body">Congratulations to the CSE department for winning the inter-departmental tech fest. Your hard work and innovation are commendable.</p></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const audienceRadios = document.querySelectorAll('input[name="audience"]');
+        const departmentSelectWrapper = document.getElementById('department-select');
+        audienceRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'staff' || this.value === 'students') {
+                    departmentSelectWrapper.classList.add('visible');
+                } else {
+                    departmentSelectWrapper.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+    <script>
+        const userProfile = document.querySelector('.user-profile');
+        if (userProfile) {
+            const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+            userProfile.addEventListener('click', function(event) {
+                dropdownMenu.classList.toggle('active');
+                event.stopPropagation();
+            });
+            window.addEventListener('click', function(event) {
+                if (dropdownMenu && dropdownMenu.classList.contains('active')) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

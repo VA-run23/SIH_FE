@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College News - Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header"><h3>Principal Portal</h3></div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="active"><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+                <li><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>College News & Updates</h2>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <span>Dr. Anjali Rao</span> <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header">
+                                <h5>Dr. Anjali Rao</h5> <p>Principal</p>
+                            </div>
+                            <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="news-grid-container">
+                <div class="news-card">
+                    <i class="fas fa-briefcase"></i>
+                    <h4>Placement Updates (2025 Batch)</h4>
+                    <div class="news-details">
+                        <ul>
+                            <li><strong>Overall Placement:</strong> 85% (as of Sept 2025)</li>
+                            <li><strong>Highest Package:</strong> ₹24 LPA (Domestic)</li>
+                            <li><strong>Average Package:</strong> ₹7.2 LPA</li>
+                            <li><strong>Top Recruiters:</strong> TCS (45 offers), Infosys (32), Wipro (28), Amazon (4)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <i class="fas fa-book-open"></i>
+                    <h4>Publications & Research</h4>
+                    <div class="news-details">
+                        <ul>
+                            <li><strong>Total Papers (Q3 2025):</strong> 12</li>
+                            <li><strong>Scopus Indexed:</strong> 7</li>
+                            <li><strong>IEEE Conferences:</strong> 3</li>
+                            <li><strong>Funded Project:</strong> ₹15 Lakhs grant from VTU for AI research.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <i class="fas fa-medal"></i>
+                    <h4>Accreditation & Ranking</h4>
+                    <div class="news-details">
+                        <ul>
+                            <li><strong>NBA Status:</strong> CSE & ECE accredited until 2028.</li>
+                            <li><strong>NAAC Grade:</strong> A+ (Cycle 2)</li>
+                            <li><strong>NIRF Ranking (2025):</strong> 151-200 Band (Engineering)</li>
+                            <li><strong>VTU Rank:</strong> 3rd in Mysuru Zone for academic results.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <i class="fas fa-users-cog"></i>
+                    <h4>Student Club Achievements</h4>
+                    <div class="news-details">
+                        <ul>
+                            <li><strong>Robotics Club:</strong> Won 1st place at IIT Bombay's Techfest.</li>
+                            <li><strong>Coding Club:</strong> Runners-up at National Level Smart India Hackathon.</li>
+                            <li><strong>NSS Wing:</strong> Organized successful blood donation camp (150+ units).</li>
+                            <li><strong>Entrepreneurship Cell:</strong> Secured incubation for 2 student startups.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <i class="fas fa-gifts"></i>
+                    <h4>Annual Fest "Innovate-2025"</h4>
+                    <div class="news-details">
+                        <ul>
+                            <li><strong>Dates:</strong> November 15-17, 2025</li>
+                            <li><strong>Theme:</strong> AI for a Sustainable Future</li>
+                            <li><strong>Chief Guest (Invited):</strong> Dr. S. Somanath, Chairman, ISRO</li>
+                            <li><strong>Expected Footfall:</strong> 5000+ students from various colleges.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h4>Campus Investments</h4>
+                    <div class="news-details">
+                        <ul>
+                            <li><strong>New IoT Lab:</strong> Funded by alumni donation of ₹50 Lakhs.</li>
+                            <li><strong>Library Upgrade:</strong> Subscription to IEEE Xplore Digital Library.</li>
+                            <li><strong>Infrastructure:</strong> Campus-wide Wi-Fi 6 upgrade project initiated.</li>
+                            <li><strong>Software:</strong> Procured 50 new licenses for ANSYS Mechanical.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        // --- USER PROFILE DROPDOWN SCRIPT ---
+        const userProfile = document.querySelector('.user-profile');
+        if (userProfile) {
+            const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+            userProfile.addEventListener('click', function(event) {
+                dropdownMenu.classList.toggle('active');
+                event.stopPropagation();
+            });
+            window.addEventListener('click', function(event) {
+                if (dropdownMenu && dropdownMenu.classList.contains('active')) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

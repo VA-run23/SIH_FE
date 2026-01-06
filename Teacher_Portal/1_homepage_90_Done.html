@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .header-nav {
+            color: #1ae3df;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-pills .nav-link {
+            background-color: rgba(255,255,255,0.1);
+            color: #000;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #1ae3df;
+            color: #667eea;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: #1ae3df;
+        }
+
+        .announcement-section {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .announcement-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+
+        .announcement-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .announcement-meta {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .class-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 5px;
+            display: inline-block;
+        }
+
+        .class-info.individual {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            flex-shrink: 0;
+        }
+
+        .announcement-content {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .college-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .split-container {
+            display: flex;
+            height: auto;
+            min-height: 60vh;
+            gap: 0;
+            background: transparent;
+        }
+
+        .split-pane {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .split-pane-left,
+        .split-pane-right {
+            height: 100%;
+            transition: flex-basis 0.2s;
+        }
+
+        .split-divider {
+            flex: none;
+            width: 8px;
+            cursor: col-resize;
+            background: #dee2e6;
+            z-index: 2;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .split-divider:hover, .split-divider.active {
+            background: #1ae3df;
+        }
+
+        .split-divider:after {
+            content: "";
+            display: block;
+            width: 2px;
+            height: 40px;
+            background: #bbb;
+            margin: 10px auto;
+            border-radius: 4px;
+        }
+
+        .schedule-form {
+            background: #fff;
+            border: 2px dashed #1ae3df;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .schedule-form.show {
+            display: block;
+        }
+
+        .datetime-input {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 6px 10px;
+            font-size: 0.9em;
+        }
+
+        .datetime-input:focus {
+            border-color: #1ae3df;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 227, 223, 0.25);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-tab.active {
+            background: #1ae3df;
+            color: white;
+            border-color: #1ae3df;
+        }
+
+        .filter-tab:hover {
+            background: rgba(26, 227, 223, 0.1);
+            border-color: #1ae3df;
+        }
+
+        .announcement-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-published {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-scheduled {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-draft {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .filter-count {
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            margin-left: 5px;
+            min-width: 18px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .class-selector {
+            margin-top: 10px;
+        }
+
+        .semester-info {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 991.98px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .split-divider {
+                display: none;
+            }
+            .split-pane-left,
+            .split-pane-right {
+                flex: 1 1 100%;
+            }
+            .announcement-section {
+                height: auto;
+                min-height: 400px;
+            }
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 10px;
+        }
+
+        .form-row .form-control {
+            flex: 1;
+        }
+
+        .date-time-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .date-time-group .form-control {
+            flex: 1;
+        }
+
+        .priority-badge {
+            background: #dc3545;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .priority-badge.medium {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .priority-badge.low {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <header class="header-nav">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+<div style="text-align: center;">
+  <a href="1_homepage_90_Done.html" style="text-decoration: none; color: inherit; font-size: 2em; font-weight: bold;">College Name</a>
+</div>
+
+            </div>
+        </div>
+    </header>
+    
+    <div class="container-fluid mt-4">
+        <!-- Navigation Pills -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link " href="./2_todaysSchedule.html"><i class="fas fa-calendar-day me-2"></i>Today's Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./3_weeklyTimetable.html"><i class="fas fa-table me-2"></i>Weekly Time Table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./4_myClasses_Done.html"><i class="fas fa-book me-2"></i>My Classes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Login.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content with Draggable Divider -->
+        <div class="split-container" id="splitContainer">
+            <!-- Announcements done by me -->
+            <div class="split-pane split-pane-left" id="leftPane" style="flex-basis:50%;">
+                <div class="announcement-section">
+                    <h5 class="section-header">
+                        <i class="fas fa-bullhorn me-2"></i>Announcements done by me
+                    </h5>
+
+                    <!-- Enhanced Filters -->
+                    <div class="filter-section">
+                        <!-- Enhanced Filter Tabs with Time-based Filtering -->
+                        <div class="filter-tabs">
+                            <div class="filter-tab active" data-filter="all" onclick="filterMyAnnouncements('all')">
+                                <i class="fas fa-list me-1"></i>All
+                                <span class="filter-count" id="count-all">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="last-7-days" onclick="filterMyAnnouncements('last-7-days')">
+                                <i class="fas fa-calendar-week me-1"></i>Last 7 Days
+                                <span class="filter-count" id="count-last-7-days">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="scheduled" onclick="filterMyAnnouncements('scheduled')">
+                                <i class="fas fa-clock me-1"></i>Scheduled
+                                <span class="filter-count" id="count-scheduled">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="upcoming-35-days" onclick="filterMyAnnouncements('upcoming-35-days')">
+                                <i class="fas fa-calendar-plus me-1"></i>Next 35 Days
+                                <span class="filter-count" id="count-upcoming-35-days">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="past" onclick="filterMyAnnouncements('past')">
+                                <i class="fas fa-history me-1"></i>Past
+                                <span class="filter-count" id="count-past">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Create Announcement Form -->
+                        <div class="form-row">
+                            <input type="text" class="form-control form-control-sm" id="classAnnouncementInput" placeholder="New Class Announcement">
+                            <button class="btn btn-primary btn-sm" type="button" onclick="toggleScheduleForm('class')">
+                                <i class="fas fa-plus me-1"></i>Add
+                            </button>
+                        </div>
+
+                        <div class="form-row">
+                            <input type="text" class="form-control form-control-sm" id="individualAnnouncementInput" placeholder="New Individual Announcement">
+                            <button class="btn btn-primary btn-sm" type="button" onclick="toggleScheduleForm('individual')">
+                                <i class="fas fa-plus me-1"></i>Add
+                            </button>
+                        </div>
+
+                        <!-- Enhanced Schedule Form with Class Selection -->
+                        <div class="schedule-form" id="scheduleForm">
+                            <div class="row mb-3">
+                                                                <div class="col-md-3" id="usnInputCol" style="display:none;">
+                                    <label class="form-label small">Student USN:</label>
+                                    <input type="text" class="form-control form-control-sm" id="studentUSNInput" placeholder="e.g. 1RV21CS001" maxlength="10" pattern="[A-Za-z0-9]{10}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Schedule Date:</label>
+                                    <input type="date" class="form-control form-control-sm datetime-input" id="scheduleDate">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Schedule Time:</label>
+                                    <input type="time" class="form-control form-control-sm datetime-input" id="scheduleTime">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Priority:</label>
+                                    <select class="form-control form-control-sm" id="announcementPriority">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <!-- Combined Class Selector -->
+                            <div class="class-selector" id="classSelector" style="display: none;">
+                            <label class="form-label small">Select Class:</label>
+                                <select class="form-control form-control-sm" id="classComboSelect">
+                                    <option value="CSE-A-5">Computer Science (CSE) - Section A - 5th Semester</option>
+                                    <option value="AIMLB-3">AI & Machine Learning (AI ML) - Section B - 3rd Semester</option>
+                                    <option value="MECH-B-1">Mechanical Engineering (MECH) - Section B - 1st Semester</option>
+                                    <option value="DS-A-7">Data Science (DS) - Section A - 7th Semester</option>
+                                    <option value="CS-A-3">Cyber Security (DS)- Section A - 3rd Semester</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mt-3 text-end">
+                                <button class="btn btn-secondary btn-sm me-2" onclick="cancelSchedule()">Cancel</button>
+                                <button class="btn btn-success btn-sm" onclick="saveAnnouncement()">
+                                    <i class="fas fa-save me-1"></i>Save Announcement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Announcement Items -->
+                    <div class="announcement-content" id="myAnnouncementsList">
+                        <!-- Sample announcements with class info -->
+                        <div class="announcement-item" data-status="published" data-date="2025-09-15" data-type="class" data-class="CSE D" data-semester="7">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Database Systems Quiz Tomorrow
+                                        <span class="announcement-status status-published">Published</span>
+                                        <span class="priority-badge medium">Medium</span>
+                                    </strong>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-calendar me-1"></i>Posted 2 hours ago
+                                        <span class="class-info">CSE D</span>
+                                        <span class="semester-info">7th Sem</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="announcement-item" data-status="scheduled" data-date="2025-09-18" data-type="individual" data-class="Individual" data-semester="">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Project Submission Reminder
+                                        <span class="announcement-status status-scheduled">Scheduled</span>
+                                        <span class="priority-badge high">High</span>
+                                    </strong>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-clock me-1"></i>Scheduled for Sep 18, 2025 at 10:00 AM
+                                        <span class="class-info individual">Individual Students</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="announcement-item" data-status="published" data-date="2025-09-10" data-type="class" data-class="ME A" data-semester="3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Mid-term Exam Results Available
+                                        <span class="announcement-status status-published">Published</span>
+                                        <span class="priority-badge low">Low</span>
+                                    </strong>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-history me-1"></i>Posted 5 days ago
+                                        <span class="class-info">ME A</span>
+                                        <span class="semester-info">3rd Sem</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-info"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="announcement-item" data-status="scheduled" data-date="2025-10-05" data-type="class" data-class="CSE B" data-semester="5">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Final Project Guidelines Release
+                                        <span class="announcement-status status-scheduled">Scheduled</span>
+                                        <span class="priority-badge medium">Medium</span>
+                                    </strong>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-clock me-1"></i>Scheduled for Oct 5, 2025 at 2:00 PM
+                                        <span class="class-info">CSE B</span>
+                                        <span class="semester-info">5th Sem</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div id="splitDivider" class="split-divider"></div>
+
+            <!-- Announcements for me -->
+            <div class="split-pane split-pane-right" id="rightPane" style="flex-basis:50%;">
+                <div class="announcement-section">
+                    <h5 class="section-header">
+                        <i class="fas fa-inbox me-2"></i>Announcements for me
+                    </h5>
+                    
+                    <!-- Enhanced Filter Options for Received Announcements -->
+                    <div class="filter-section">
+                        <div class="filter-tabs mb-3">
+                            <div class="filter-tab active" data-filter="all" onclick="filterReceivedAnnouncements('all')">
+                                <i class="fas fa-list me-1"></i>All
+                                <span class="filter-count" id="received-count-all">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="unread" onclick="filterReceivedAnnouncements('unread')">
+                                <i class="fas fa-envelope me-1"></i>Unread
+                                <span class="filter-count" id="received-count-unread">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="urgent" onclick="filterReceivedAnnouncements('urgent')">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Urgent
+                                <span class="filter-count" id="received-count-urgent">0</span>
+                            </div>
+                            <div class="filter-tab" data-filter="this-week" onclick="filterReceivedAnnouncements('this-week')">
+                                <i class="fas fa-calendar-week me-1"></i>This Week
+                                <span class="filter-count" id="received-count-this-week">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <select class="form-control form-control-sm" id="classFilter">
+                                    <option value="">All Classes</option>
+                                    <option value="CSE">Computer Science</option>
+                                    <option value="ECE">Electronics & Communication</option>
+                                    <option value="ME">Mechanical Engineering</option>
+                                    <option value="CE">Civil Engineering</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" id="searchReceived" placeholder="Search announcements...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Received Announcements -->
+                    <div class="announcement-content" id="receivedAnnouncementsList">
+                        <div class="announcement-item" data-status="unread" data-priority="high" data-date="2025-09-15" data-class="CSE" data-semester="7">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>HOD's Important Notice - Examination Schedule
+                                        <span class="priority-badge high">Urgent</span>
+                                    </strong>
+                                    <p class="mb-1">Important notice regarding upcoming examinations and syllabus coverage for final semester.</p>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-calendar me-1"></i>Received 3 hours ago
+                                        <span class="ms-3"><i class="fas fa-user me-1"></i>From: Dr. Smith (HOD)</span>
+                                        <span class="class-info">CSE D</span>
+                                        <span class="semester-info">7th Sem</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="announcement-item" data-status="read" data-priority="medium" data-date="2025-09-14" data-class="General" data-semester="">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Principal's Notice - College Fest Registration
+                                        <span class="priority-badge medium">Medium</span>
+                                    </strong>
+                                    <p class="mb-1">College fest registration is now open. Please register before the deadline to participate in various events.</p>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-calendar me-1"></i>Received 1 day ago
+                                        <span class="ms-3"><i class="fas fa-user me-1"></i>From: Principal Office</span>
+                                        <span class="class-info individual">All Students</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="announcement-item" data-status="read" data-priority="low" data-date="2025-09-13" data-class="General" data-semester="">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Library Notice - New Books Collection
+                                        <span class="priority-badge low">Low</span>
+                                    </strong>
+                                    <p class="mb-1">New books have been added to the library. Check out the updated catalog for technical and reference books.</p>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-calendar me-1"></i>Received 2 days ago
+                                        <span class="ms-3"><i class="fas fa-user me-1"></i>From: Library Department</span>
+                                        <span class="class-info individual">All Students</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="announcement-item" data-status="unread" data-priority="high" data-date="2025-09-15" data-class="ME" data-semester="3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>Mechanical Dept - Lab Schedule Change
+                                        <span class="priority-badge high">Urgent</span>
+                                    </strong>
+                                    <p class="mb-1">Important change in lab schedule for Manufacturing Technology. New timing: 2:00 PM - 5:00 PM.</p>
+                                    <div class="announcement-meta">
+                                        <i class="fas fa-calendar me-1"></i>Received 1 hour ago
+                                        <span class="ms-3"><i class="fas fa-user me-1"></i>From: Prof. Kumar (ME Dept)</span>
+                                        <span class="class-info">ME A</span>
+                                        <span class="semester-info">3rd Sem</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentAnnouncementType = '';
+        let announcements = [];
+
+        // Draggable Split Layout Implementation
+        (function () {
+            var isDragging = false, startX = 0, startLeftWidth = 0;
+            var container = document.getElementById('splitContainer');
+            var leftPane = document.getElementById('leftPane');
+            var rightPane = document.getElementById('rightPane');
+            var divider = document.getElementById('splitDivider');
+
+            function getTotalWidth() {
+                return container.offsetWidth;
+            }
+
+            function mouseDownHandler(e) {
+                if (window.innerWidth < 992) return;
+                isDragging = true;
+                startX = (e.touches ? e.touches[0].clientX : e.clientX);
+                startLeftWidth = leftPane.offsetWidth;
+                divider.classList.add('active');
+                document.body.style.cursor = "col-resize";
+                window.addEventListener('mousemove', mouseMoveHandler);
+                window.addEventListener('mouseup', mouseUpHandler);
+                window.addEventListener('touchmove', mouseMoveHandler, {passive:false});
+                window.addEventListener('touchend', mouseUpHandler);
+            }
+
+            function mouseMoveHandler(e) {
+                if (!isDragging) return;
+                var clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+                var containerWidth = getTotalWidth();
+                var dx = clientX - startX;
+                var newLeftWidth = startLeftWidth + dx;
+
+                var min = containerWidth * 0.2;
+                var max = containerWidth * 0.8;
+                if (newLeftWidth < min) newLeftWidth = min;
+                if (newLeftWidth > max) newLeftWidth = max;
+
+                var leftPercent = (newLeftWidth / containerWidth) * 100;
+                var rightPercent = 100 - leftPercent;
+                leftPane.style.flexBasis = leftPercent + "%";
+                rightPane.style.flexBasis = rightPercent + "%";
+                e.preventDefault();
+            }
+
+            function mouseUpHandler() {
+                isDragging = false;
+                divider.classList.remove('active');
+                document.body.style.cursor = "";
+                window.removeEventListener('mousemove', mouseMoveHandler);
+                window.removeEventListener('mouseup', mouseUpHandler);
+                window.removeEventListener('touchmove', mouseMoveHandler);
+                window.removeEventListener('touchend', mouseUpHandler);
+            }
+
+            divider.addEventListener('mousedown', mouseDownHandler);
+            divider.addEventListener('touchstart', mouseDownHandler, {passive:false});
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth < 992) {
+                    leftPane.style.flexBasis = '';
+                    rightPane.style.flexBasis = '';
+                }
+            });
+        })();
+
+        // Initialize date constraints and update filter counts
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('scheduleDate');
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(today.getDate() + 35);
+
+            dateInput.min = today.toISOString().split('T')[0];
+            dateInput.max = maxDate.toISOString().split('T')[0];
+
+            // Update filter counts on load
+            updateFilterCounts();
+            updateReceivedFilterCounts();
+
+            // Add search functionality
+            document.getElementById('searchReceived').addEventListener('input', function() {
+                searchReceivedAnnouncements(this.value);
+            });
+
+            document.getElementById('classFilter').addEventListener('change', function() {
+                filterByClass(this.value);
+            });
+        });
+
+        function toggleScheduleForm(type) {
+            const form = document.getElementById('scheduleForm');
+            const classSelector = document.getElementById('classSelector');
+            currentAnnouncementType = type;
+
+            if (form.classList.contains('show')) {
+                form.classList.remove('show');
+            } else {
+                form.classList.add('show');
+                // Show class selector only for class announcements
+                if (type === 'class') {
+                    classSelector.style.display = 'block';
+                    document.getElementById('usnInputCol').style.display = 'none';
+                } else {
+                    classSelector.style.display = 'none';
+                    document.getElementById('usnInputCol').style.display = 'block';
+                }
+                // Set default date to today and time to current time
+                const now = new Date();
+                document.getElementById('scheduleDate').value = now.toISOString().split('T')[0];
+                document.getElementById('scheduleTime').value = now.toTimeString().slice(0, 5);
+            }
+        }
+
+        function cancelSchedule() {
+            document.getElementById('scheduleForm').classList.remove('show');
+            currentAnnouncementType = '';
+        }
+
+        function saveAnnouncement() {
+            const content = currentAnnouncementType === 'class' ? 
+                document.getElementById('classAnnouncementInput').value :
+                document.getElementById('individualAnnouncementInput').value;
+
+            const scheduleDate = document.getElementById('scheduleDate').value;
+            const scheduleTime = document.getElementById('scheduleTime').value;
+            const priority = document.getElementById('announcementPriority').value;
+
+            // USN validation for individual
+            let studentUSN = '';
+            if (currentAnnouncementType === 'individual') {
+                studentUSN = document.getElementById('studentUSNInput').value.trim();
+                if (!/^[A-Za-z0-9]{10}$/.test(studentUSN)) {
+                    alert('Please enter a valid 10-character alphanumeric USN (e.g. 1RV21CS001)');
+                    return;
+                }
+            }
+
+            if (!content.trim()) {
+                alert('Please enter announcement content');
+                return;
+            }
+
+            if (!scheduleDate || !scheduleTime) {
+                alert('Please select date and time');
+                return;
+            }
+
+            const scheduledDateTime = new Date(scheduleDate + 'T' + scheduleTime);
+            const now = new Date();
+
+            // Get class info for class announcements
+            let classInfo = '';
+            let semesterInfo = '';
+            if (currentAnnouncementType === 'class') {
+                const dept = document.getElementById('departmentSelect').value;
+                const section = document.getElementById('sectionSelect').value;
+                const semester = document.getElementById('semesterSelect').value;
+                classInfo = `${dept} ${section}`;
+                semesterInfo = semester;
+            } else {
+                classInfo = 'Individual';
+            }
+
+            // Determine status
+            let status = 'scheduled';
+            if (scheduledDateTime <= now) {
+                status = 'published';
+            }
+
+            // Create new announcement
+            const announcement = {
+                id: Date.now(),
+                content: content,
+                type: currentAnnouncementType,
+                scheduledDate: scheduleDate,
+                scheduledTime: scheduleTime,
+                status: status,
+                priority: priority,
+                classInfo: classInfo,
+                semesterInfo: semesterInfo,
+                createdAt: now,
+                usn: studentUSN
+            };
+
+            addAnnouncementToDOM(announcement);
+
+            // Clear form
+            if (currentAnnouncementType === 'class') {
+                document.getElementById('classAnnouncementInput').value = '';
+            } else {
+                document.getElementById('individualAnnouncementInput').value = '';
+                document.getElementById('studentUSNInput').value = '';
+            }
+
+            cancelSchedule();
+            updateFilterCounts();
+            showToast('Success', 'Announcement scheduled successfully!', 'success');
+        }
+
+        function addAnnouncementToDOM(announcement) {
+            const announcementsList = document.getElementById('myAnnouncementsList');
+            const statusClass = `status-${announcement.status}`;
+            const statusText = announcement.status.charAt(0).toUpperCase() + announcement.status.slice(1);
+            const priorityClass = announcement.priority;
+
+            let metaText = '';
+            if (announcement.status === 'scheduled') {
+                const date = new Date(announcement.scheduledDate + 'T' + announcement.scheduledTime);
+                metaText = `<i class="fas fa-clock me-1"></i>Scheduled for ${date.toLocaleDateString()} at ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            } else {
+                metaText = `<i class="fas fa-calendar me-1"></i>Posted just now`;
+            }
+
+            const classDisplay = announcement.type === 'class' ? 
+                `<span class="class-info">${announcement.classInfo}</span><span class="semester-info">${announcement.semesterInfo}th Sem</span>` :
+                `<span class="class-info individual">${announcement.classInfo}</span>` + (announcement.usn ? `<span class="ms-2 badge bg-primary">USN: ${announcement.usn}</span>` : '');
+
+            const announcementHTML = `
+                <div class="announcement-item" data-status="${announcement.status}" data-date="${announcement.scheduledDate}" data-type="${announcement.type}" data-class="${announcement.classInfo}" data-semester="${announcement.semesterInfo}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>${announcement.content}
+                                <span class="announcement-status ${statusClass}">${statusText}</span>
+                                <span class="priority-badge ${priorityClass}">${announcement.priority.charAt(0).toUpperCase() + announcement.priority.slice(1)}</span>
+                            </strong>
+                            <div class="announcement-meta">
+                                ${metaText}
+                                ${classDisplay}
+                            </div>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            announcementsList.insertAdjacentHTML('afterbegin', announcementHTML);
+        }
+
+        function filterMyAnnouncements(filter) {
+            // Update active tab
+            document.querySelectorAll('#leftPane .filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`#leftPane [data-filter="${filter}"]`).classList.add('active');
+
+            // Filter announcements
+            const announcements = document.querySelectorAll('#myAnnouncementsList .announcement-item');
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            const thirtyFiveDaysFromNow = new Date();
+            thirtyFiveDaysFromNow.setDate(today.getDate() + 35);
+
+            announcements.forEach(item => {
+                const status = item.dataset.status;
+                const date = new Date(item.dataset.date);
+                const todayStr = today.toISOString().split('T')[0];
+                let show = false;
+
+                switch(filter) {
+                    case 'all':
+                        show = true;
+                        break;
+                    case 'last-7-days':
+                        show = date >= sevenDaysAgo && date <= today;
+                        break;
+                    case 'scheduled':
+                        show = status === 'scheduled';
+                        break;
+                    case 'upcoming-35-days':
+                        show = date > today && date <= thirtyFiveDaysFromNow;
+                        break;
+                    case 'past':
+                        show = date < new Date(todayStr) || status === 'past';
+                        break;
+                }
+
+                item.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        function filterReceivedAnnouncements(filter) {
+            // Update active tab
+            document.querySelectorAll('#rightPane .filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`#rightPane [data-filter="${filter}"]`).classList.add('active');
+
+            // Filter received announcements
+            const announcements = document.querySelectorAll('#receivedAnnouncementsList .announcement-item');
+            const today = new Date();
+            const weekAgo = new Date();
+            weekAgo.setDate(today.getDate() - 7);
+
+            announcements.forEach(item => {
+                const status = item.dataset.status;
+                const priority = item.dataset.priority;
+                const date = new Date(item.dataset.date);
+                let show = false;
+
+                switch(filter) {
+                    case 'all':
+                        show = true;
+                        break;
+                    case 'unread':
+                        show = status === 'unread';
+                        break;
+                    case 'urgent':
+                        show = priority === 'high';
+                        break;
+                    case 'this-week':
+                        show = date >= weekAgo;
+                        break;
+                }
+
+                item.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        function updateFilterCounts() {
+            const announcements = document.querySelectorAll('#myAnnouncementsList .announcement-item');
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            const thirtyFiveDaysFromNow = new Date();
+            thirtyFiveDaysFromNow.setDate(today.getDate() + 35);
+
+            let counts = {
+                all: 0,
+                'last-7-days': 0,
+                scheduled: 0,
+                'upcoming-35-days': 0,
+                past: 0
+            };
+
+            announcements.forEach(item => {
+                const status = item.dataset.status;
+                const date = new Date(item.dataset.date);
+                const todayStr = today.toISOString().split('T')[0];
+
+                counts.all++;
+
+                if (date >= sevenDaysAgo && date <= today) {
+                    counts['last-7-days']++;
+                }
+                if (status === 'scheduled') {
+                    counts.scheduled++;
+                }
+                if (date > today && date <= thirtyFiveDaysFromNow) {
+                    counts['upcoming-35-days']++;
+                }
+                if (date < new Date(todayStr) || status === 'past') {
+                    counts.past++;
+                }
+            });
+
+            // Update count displays
+            Object.keys(counts).forEach(filter => {
+                const countElement = document.getElementById(`count-${filter}`);
+                if (countElement) {
+                    countElement.textContent = counts[filter];
+                }
+            });
+        }
+
+        function updateReceivedFilterCounts() {
+            const announcements = document.querySelectorAll('#receivedAnnouncementsList .announcement-item');
+            const today = new Date();
+            const weekAgo = new Date();
+            weekAgo.setDate(today.getDate() - 7);
+
+            let counts = {
+                all: 0,
+                unread: 0,
+                urgent: 0,
+                'this-week': 0
+            };
+
+            announcements.forEach(item => {
+                const status = item.dataset.status;
+                const priority = item.dataset.priority;
+                const date = new Date(item.dataset.date);
+
+                counts.all++;
+
+                if (status === 'unread') {
+                    counts.unread++;
+                }
+                if (priority === 'high') {
+                    counts.urgent++;
+                }
+                if (date >= weekAgo) {
+                    counts['this-week']++;
+                }
+            });
+
+            // Update count displays
+            Object.keys(counts).forEach(filter => {
+                const countElement = document.getElementById(`received-count-${filter}`);
+                if (countElement) {
+                    countElement.textContent = counts[filter];
+                }
+            });
+        }
+
+        function searchReceivedAnnouncements(searchTerm) {
+            const announcements = document.querySelectorAll('#receivedAnnouncementsList .announcement-item');
+            
+            announcements.forEach(item => {
+                const content = item.textContent.toLowerCase();
+                const matches = content.includes(searchTerm.toLowerCase());
+                item.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        function filterByClass(selectedClass) {
+            const announcements = document.querySelectorAll('#receivedAnnouncementsList .announcement-item');
+            
+            announcements.forEach(item => {
+                const itemClass = item.dataset.class;
+                const matches = !selectedClass || itemClass.includes(selectedClass) || itemClass === 'General';
+                item.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        function showToast(title, message, type) {
+            const toast = document.createElement('div');
+            toast.className = 'position-fixed top-0 end-0 p-3';
+            toast.style.zIndex = '9999';
+
+            const bgClass = type === 'success' ? 'bg-success' : type === 'warning' ? 'bg-warning' : 'bg-info';
+
+            toast.innerHTML = `
+                <div class="toast show" role="alert">
+                    <div class="toast-header ${bgClass} text-white">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong class="me-auto">${title}</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

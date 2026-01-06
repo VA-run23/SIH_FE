@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal: Announcements</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Coordinator Portal</div>
+        <ul class="nav-menu">
+            <li><a href="announcements.html" class="nav-item active">Announcements</a></li>
+            <li><a href="user_management.html" class="nav-item">User Management</a></li>
+            <li><a href="classroom_management.html" class="nav-item">Classroom Management</a></li>
+            <li><a href="course_management.html" class="nav-item">Course Management</a></li>
+            <li><a href="timetable.html" class="nav-item">Timetable</a></li>
+            <li><a href="cie_management.html" class="nav-item">CIE Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="announcements" class="content-section">
+            <h2 class="section-title">Announcements</h2>
+            <div class="announcement-actions">
+                <button id="add-announcement-btn" class="submit-btn" style="width: auto;">+ Add Announcement</button>
+            </div>
+            <ul id="announcement-list"></ul>
+        </section>
+    </main>
+
+    <div id="add-announcement-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Create New Announcement</h3>
+            <form id="announcement-form">
+                <div class="form-group">
+                    <label for="announcement-audience">Announce to:</label>
+                    <select id="announcement-audience">
+                        <option value="all">All Users</option>
+                        <option value="students">Students</option>
+                        <option value="teachers">Teachers</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="announcement-title">Title</label>
+                    <input type="text" id="announcement-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="announcement-message">Message</label>
+                    <textarea id="announcement-message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Post Announcement</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const announcementModal = document.getElementById('add-announcement-modal');
+            const addAnnouncementBtn = document.getElementById('add-announcement-btn');
+            const announcementList = document.getElementById('announcement-list');
+            const announcementForm = document.getElementById('announcement-form');
+
+            // --- Modal Logic ---
+            const closeBtns = document.querySelectorAll('.close-btn');
+            addAnnouncementBtn.addEventListener('click', () => {
+                announcementModal.classList.add('active');
+            });
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', () => btn.closest('.modal').classList.remove('active'));
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.classList.remove('active');
+                }
+            });
+
+            // --- Announcements Logic ---
+            let announcements = [
+                { title: 'Welcome to the New Semester', message: 'The new academic session begins on October 25th. All students and faculty are requested to be present.', date: 'October 15, 2025', audience: 'All Users' },
+                { title: 'Hackathon Meeting on Friday', message: 'A mandatory meeting for all SIH teams will be held this Friday in the main seminar hall at 10 AM.', date: 'October 14, 2025', audience: 'Students' }
+            ];
+
+            const renderAnnouncements = () => {
+                announcementList.innerHTML = '';
+                announcements.forEach(announcement => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('announcement-item');
+                    listItem.innerHTML = `
+                        <div class="announcement-title">${announcement.title}</div>
+                        <div class="announcement-content">${announcement.message}</div>
+                        <div class="announcement-date">Posted on ${announcement.date} for <strong>${announcement.audience}</strong></div>
+                    `;
+                    announcementList.appendChild(listItem);
+                });
+            };
+
+            announcementForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newTitle = document.getElementById('announcement-title').value;
+                const newMessage = document.getElementById('announcement-message').value;
+                const newAudience = document.getElementById('announcement-audience').options[document.getElementById('announcement-audience').selectedIndex].text;
+                
+                const newAnnouncement = {
+                    title: newTitle,
+                    message: newMessage,
+                    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                    audience: newAudience
+                };
+
+                announcements.unshift(newAnnouncement);
+                renderAnnouncements();
+                announcementForm.reset();
+                announcementModal.classList.remove('active');
+                alert(`Announcement posted successfully for ${newAudience}!`);
+            });
+            
+            renderAnnouncements();
+        });
+    </script>
+</body>
+</html>

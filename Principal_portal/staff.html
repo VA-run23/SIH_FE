@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management - Principal Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header"><h3>Principal Portal</h3></div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="active"><a href="staff.html"><i class="fas fa-users"></i> Staff Management</a></li>
+                <li><a href="requests.html"><i class="fas fa-inbox"></i> Request Approvals</a></li>
+                <li><a href="news.html"><i class="fas fa-newspaper"></i> College News</a></li>
+                <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Staff Management by Department</h2>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <span>Dr. Anjali Rao</span> <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-header">
+                                <h5>Dr. Anjali Rao</h5> <p>Principal</p>
+                            </div>
+                            <a href="#"><i class="fas fa-user-edit"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="department-grid-container">
+                <a href="lecturer-list.html" class="department-link"><div class="department-card"><i class="fas fa-laptop-code"></i><h4>Computer Science</h4><p>12 Lecturers</p></div></a>
+                <a href="lecturer-list.html" class="department-link"><div class="department-card"><i class="fas fa-microchip"></i><h4>Electronics</h4><p>10 Lecturers</p></div></a>
+                <a href="lecturer-list.html" class="department-link"><div class="department-card"><i class="fas fa-cogs"></i><h4>Mechanical</h4><p>11 Lecturers</p></div></a>
+                <a href="lecturer-list.html" class="department-link"><div class="department-card"><i class="fas fa-hard-hat"></i><h4>Civil</h4><p>9 Lecturers</p></div></a>
+                <a href="lecturer-list.html" class="department-link"><div class="department-card"><i class="fas fa-info-circle"></i><h4>Information Science</h4><p>8 Lecturers</p></div></a>
+                <a href="lecturer-list.html" class="department-link"><div class="department-card"><i class="fas fa-brain"></i><h4>AI & Machine Learning</h4><p>7 Lecturers</p></div></a>
+            </div>
+        </main>
+    </div>
+    <script>
+        const userProfile = document.querySelector('.user-profile');
+        if (userProfile) {
+            const dropdownMenu = userProfile.querySelector('.dropdown-menu');
+            userProfile.addEventListener('click', function(event) {
+                dropdownMenu.classList.toggle('active');
+                event.stopPropagation();
+            });
+            window.addEventListener('click', function(event) {
+                if (dropdownMenu && dropdownMenu.classList.contains('active')) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
