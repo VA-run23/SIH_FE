@@ -320,6 +320,7 @@ For questions, feature requests, or collaboration opportunities:
 
 ---
 
-**Developed with ❤️ for Smart India Hackathon 2024**
+**Developed with ❤️ for Smart India Hackathon 2025**
 
 </div>
+
